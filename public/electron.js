@@ -11,11 +11,11 @@ const isDev = require("electron-is-dev");
 let mainWindow;
 
 function createWindow() {
-  mainWindow = new BrowserWindow({width: 900, height: 680});
+  mainWindow = new BrowserWindow({width: 900, height: 680, backgroundColor: "#151b21"});
 
   mainWindow.loadURL(
     isDev
-    ? "http://localhost:3000
+    ? "http://localhost:3000"
     : `file://${path.join(__dirname, "../build/index.html")}`
   );
 
