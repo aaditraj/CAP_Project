@@ -11,7 +11,7 @@ const isDev = require("electron-is-dev");
 let mainWindow;
 
 function createWindow() {
-  mainWindow = new BrowserWindow({width: 900, height: 680, backgroundColor: "#151b21"});
+  mainWindow = new BrowserWindow({width: 900, height: 680, backgroundColor: "#151b21", webPreferences: {contextIsolation: true}});
 
   mainWindow.loadURL(
     isDev
