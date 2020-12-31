@@ -8,12 +8,12 @@ const InfoButton = () => {
         <Accordion>
           <Card>
             <Card.Header>
-              <Accordion.Toggle as={Button} eventKey="1"  >
+              <Accordion.Toggle as={Button} eventKey="1" variant = 'info' >
                 About This Quiz
               </Accordion.Toggle>
             </Card.Header>
             <Accordion.Collapse eventKey="1">
-              <Card.Body>This is a 5 question quiz about FBLA. Question types include multiple choice, true and false, fill in the blank, dropdown, and matching.</Card.Body>
+              <Card.Body>This is a 5 question quiz about FBLA (Future Business Leaders of America). Question types include multiple choice, true and false, fill in the blank, dropdown, and matching.</Card.Body>
             </Accordion.Collapse>
           </Card>
         </Accordion>
