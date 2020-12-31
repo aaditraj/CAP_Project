@@ -1,10 +1,16 @@
 .App {
   text-align: center;
   color: black;
-  background-color: lightblue;
+}
+  
+.jumbo{
+  margin-bottom: 0;
+}
+
+.config{
+  margin-top: 20px;
 }
 
 h6{
   font-weight: bold;
-  margin-top: 20px;
 }
