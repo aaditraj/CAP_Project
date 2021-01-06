@@ -17,8 +17,6 @@ firebase.initializeApp({
 })
 
 
-
-
 ReactDOM.render(
   <React.StrictMode>
     <App />
