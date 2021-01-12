@@ -5,6 +5,11 @@ import './MultChoice.css'
 
 const MultChoice = (props) => {
     let components = []
+    if (props.selected === null) {
+        components.push(
+            <h6 className = 'no-answer'><strong>No answer received</strong></h6>
+        )
+    }
     for (let i = 0; i < 4; i++) {
         if (props.disabled === 'true'){
             if (i === props.selected) {
@@ -12,19 +17,19 @@ const MultChoice = (props) => {
                     components.push(
                         <Form.Check 
                         type="radio"
-                        id={`formHorizontalRadios` + (i+1)}
-                        label={props.answerChoices[i] + ' (CORRECT SELECTED)'}
+                        key={`formHorizontalRadios` + (i+1)}
+                        label={<strong>{props.answerChoices[i]} (CORRECT SELECTED)</strong>}
                         name="formHorizontalRadios"
                         disabled = {true}
                         className = 'correct'
                         />
-                    )
+                    ) 
                 } else {
                     components.push(
                         <Form.Check 
                         type="radio"
-                        id={`formHorizontalRadios` + (i+1)}
-                        label={props.answerChoices[i] + ' (INCORRECT SELECTED)'}
+                        key={`formHorizontalRadios` + (i+1)}
+                        label={<strong>{props.answerChoices[i]} (INCORRECT SELECTED)</strong>}
                         name="formHorizontalRadios"
                         disabled = {true}
                         className = 'wrong'
@@ -35,8 +40,8 @@ const MultChoice = (props) => {
                 components.push(
                     <Form.Check 
                     type="radio"
-                    id={`formHorizontalRadios` + (i+1)}
-                    label={props.answerChoices[i] + ' (CORRECT ANSWER)'}
+                    key={`formHorizontalRadios` + (i+1)}
+                    label={<strong>{props.answerChoices[i]} (CORRECT ANSWER)</strong>}
                     name="formHorizontalRadios"
                     disabled = {true}
                     className = 'correct'
@@ -46,7 +51,7 @@ const MultChoice = (props) => {
                 components.push(
                     <Form.Check 
                     type="radio"
-                    id={`formHorizontalRadios` + (i+1)}
+                    key={`formHorizontalRadios` + (i+1)}
                     label={props.answerChoices[i]}
                     name="formHorizontalRadios"
                     disabled = {true}
@@ -54,15 +59,29 @@ const MultChoice = (props) => {
                 )
             }
         } else {
-            components.push(
-                <Form.Check 
-                type="radio"
-                id={`formHorizontalRadios` + (i+1)}
-                label={props.answerChoices[i]}
-                name="formHorizontalRadios"
-                onChange = {(e) => props.onSelect(i, e)}
-                />
-            )
+            if (props.question === '1'){
+                components.push(
+                    <Form.Check 
+                    type="radio"
+                    key={`formHorizontalRadios` + (i+1)}
+                    label={props.answerChoices[i]}
+                    name="formHorizontalRadios"
+                    onChange = {(e) => props.onSelect(i, 1, e)}
+                    />
+                )
+            }
+            else {
+                components.push(
+                    <Form.Check 
+                    type="radio"
+                    key={`formHorizontalRadios` + (i+1)}
+                    label={props.answerChoices[i]}
+                    name="formHorizontalRadios"
+                    onChange = {(e) => props.onSelect(i, 2, e)}
+                    />
+                )
+            }
+            
         }
     }
     return (

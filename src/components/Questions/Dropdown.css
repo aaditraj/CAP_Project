@@ -7,7 +7,6 @@
     display: flex;
     justify-content: center;
     width: 55vh;
-    background-color: lightgreen
 }
 
 .ddCorrectTextbox{
@@ -24,19 +23,14 @@
 .userAnswer{
     width: 50vh;
     margin: 10px auto;
-    padding: 15px;
+    padding: 10px;
+    background-color: lightcoral;
 }
 
 .correctAnswer{
     width: 50vh;
     margin: 10px auto;
-    padding: 15px;
+    padding: 10px;
+    background-color: lightgreen;
 }
 
-.userAnswer{
-    background-color: lightcoral
-}
-
-.correctAnswer{
-    background-color: lightgreen
-}

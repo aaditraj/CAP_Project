@@ -3,5 +3,9 @@
 }
 
 .correct {
-    background-color: lightgreen
+    background-color: lightgreen;
+}
+
+.no-answer{
+    background-color: lightcoral
 }
