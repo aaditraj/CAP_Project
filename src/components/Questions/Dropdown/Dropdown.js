@@ -35,38 +35,24 @@ class DropdownQuestion extends React.Component {
         else {
             if (this.props.selected === this.props.answer){
                 components.push (
-                    <div className = "result">
-                        <Form.Control placeholder = {this.props.selected}  disabled className = "ddCorrectTextbox"/>
-                    </div>
+                    <Form.Group className = "formgroup correctDropdown">
+                        <h6>Correct Answer</h6>
+                        <Form.Control placeholder = {this.props.selected}  disabled />
+                    </Form.Group>
                 )
             } else {
-                if (this.props.selected === null){
-                    components.push (
-                        <div className = "incorrect">
-                        <div className = "userAnswer">
-                            <h6><strong>No Answer Received</strong></h6>
-                            {/* <Form.Control placeholder = {'No Answer Received'}  disabled /> */}
-                        </div>
-                        <div className = "correctAnswer">
-                            <h6><strong>Correct Answer:</strong></h6>
-                            <Form.Control placeholder = {this.props.answerChoices[this.props.answer]}  disabled />
-                        </div>
-                    </div>
-                    )
-                } else{
-                    components.push(
-                        <div className = "incorrect">
+                components.push(
+                        <Form.Group className = "formgroup">
                             <div className = "userAnswer">
-                                <h6><strong>You Selected:</strong></h6>
+                                <h6>You Selected:</h6>
                                 <Form.Control placeholder = {this.props.answerChoices[this.props.selected]}  disabled />
                             </div>
                             <div className = "correctAnswer">
-                                <h6><strong>Correct Answer:</strong></h6>
+                                <h6>Correct Answer:</h6>
                                 <Form.Control placeholder = {this.props.answerChoices[this.props.answer]}  disabled />
                             </div>
-                        </div>
-                    )
-                }
+                        </Form.Group>
+                )
                 
             }
             return(
@@ -74,8 +60,8 @@ class DropdownQuestion extends React.Component {
                     {components}
                 </Form.Group>
             )
+                
         }
-        
     }
     
 }

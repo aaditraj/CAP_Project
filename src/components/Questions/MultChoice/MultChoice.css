@@ -1,11 +1,15 @@
-.wrong {
+/* .wrong {
     background-color: lightcoral;
 }
 
 .correct {
     background-color: lightgreen;
-}
+} */
 
-.no-answer{
-    background-color: lightcoral
+
+.radios {
+    margin-bottom: 0px;
+}
+*{
+    font-weight: 400;
 }

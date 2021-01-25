@@ -2,13 +2,14 @@ import React from "react";
 import Accordion from "react-bootstrap/Accordion";
 import Card from "react-bootstrap/Card"
 import Button from "react-bootstrap/Button"
+import "./InfoDisplay.css"
 
 const InfoButton = () => { 
   return (
       <Accordion>
-        <Card>
+        <Card className = "card">
           <Card.Header>
-            <Accordion.Toggle as={Button} eventKey="1" variant = 'info'>
+            <Accordion.Toggle as={Button} eventKey="1" variant = 'secondary'>
               About This Quiz
             </Accordion.Toggle>
           </Card.Header>

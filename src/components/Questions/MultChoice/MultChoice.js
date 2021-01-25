@@ -1,15 +1,12 @@
 import React from "react";
 import Form from "react-bootstrap/Form";
 import './MultChoice.css'
+import xmark from "../../../assets/x.svg";
+import checkmark from "../../../assets/check.svg";
 
 
 const MultChoice = (props) => {
     let components = []
-    if (props.selected === null) {
-        components.push(
-            <h6 className = 'no-answer'><strong>No answer received</strong></h6>
-        )
-    }
     for (let i = 0; i < 4; i++) {
         if (props.disabled === 'true'){
             if (i === props.selected) {
@@ -18,7 +15,8 @@ const MultChoice = (props) => {
                         <Form.Check 
                         type="radio"
                         key={`formHorizontalRadios` + (i+1)}
-                        label={<strong>{props.answerChoices[i]} (CORRECT SELECTED)</strong>}
+                        label={<div><strong>{props.answerChoices[i]} (CORRECT SELECTED)</strong> 
+                        <img src = {checkmark}/></div>}
                         name="formHorizontalRadios"
                         disabled = {true}
                         className = 'correct'
@@ -29,7 +27,8 @@ const MultChoice = (props) => {
                         <Form.Check 
                         type="radio"
                         key={`formHorizontalRadios` + (i+1)}
-                        label={<strong>{props.answerChoices[i]} (INCORRECT SELECTED)</strong>}
+                        label={<div><strong>{props.answerChoices[i]} (INCORRECT SELECTED)</strong>
+                        <img src = {xmark}/></div>}
                         name="formHorizontalRadios"
                         disabled = {true}
                         className = 'wrong'
@@ -41,7 +40,8 @@ const MultChoice = (props) => {
                     <Form.Check 
                     type="radio"
                     key={`formHorizontalRadios` + (i+1)}
-                    label={<strong>{props.answerChoices[i]} (CORRECT ANSWER)</strong>}
+                    label={<div><strong>{props.answerChoices[i]} (CORRECT ANSWER)</strong>
+                    <img src = {checkmark}/></div>}
                     name="formHorizontalRadios"
                     disabled = {true}
                     className = 'correct'
@@ -85,9 +85,11 @@ const MultChoice = (props) => {
         }
     }
     return (
-        <Form.Group >
+        <Form>
+        <Form.Group className = "radios">
             {components}
         </Form.Group>
+        </Form>
         
     )
 }

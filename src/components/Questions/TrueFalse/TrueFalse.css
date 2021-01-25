@@ -1,0 +1,15 @@
+.TF-result .correctTF{
+   color: black;
+   font-weight: bold;
+   border: none;
+   background-color: green;
+   margin: 0 5px 0 5px; 
+}
+
+.TF-result .incorrectTF{
+    color: black;
+    font-weight: bold;
+    border: none;
+    margin: 0 5px 0 5px;
+    background-color: red;
+}

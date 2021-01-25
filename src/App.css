@@ -1,33 +1,50 @@
 .App {
   text-align: center;
   color: black;
+  background-color: #1A2E40;
 }
   
 .jumbo{
   margin-bottom: 0;
+  background-color: #1A2E40;
+  color: antiquewhite;
+  padding: 30px;
 }
+
 
 div.question{
   background-color: antiquewhite;
 }
 
-div.dropdown {
-  margin: 40px 0px 0px 0px;
-  padding: 15px;
+div.question h5{
+  font-weight: 350;
+  color: #1A2E40;
+}
+
+.fillBlankError{
+  color: red;
 }
 
 h6{
   margin-top: 10px;
 }
 
-div .question:nth-child(n+3) {
-  margin: 60px 0px 0px 0px;
+div .question {
+  margin: 5px 0px 0px 0px;
   padding: 15px;
 }
 
-
 .submit {
-  margin: 20px auto;
+  padding-bottom: 15px;
+}
+div.submissionError h5{
+  background-color: lightcoral;
+  font-weight: 450;
+  margin-top: 20px;
+}
+
+.retake{
+  padding-bottom: 15px;
 }
 
 h4, h5, h6{
