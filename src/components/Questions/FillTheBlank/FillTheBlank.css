@@ -2,26 +2,16 @@
     display: flex;
     flex-flow: column nowrap;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
 }
 .formgroup h6{
     font-weight: bold;
 }
 
-.correctFill{
-    background-color: lightgreen;
-    width: 50vh;
-    margin: 10px auto;
-    padding: 10px;  
-}
-
-.incorrectFill {
-    background-color: lightcoral;
-    width: 50vh;
-    margin: 10px auto;
-    padding: 10px;
-}
 .textbox {
     width: 50vh;
     margin-top: 10px;
-}
+} 
+/* .fill-blank-wrapper{
+    margin-left: 100px;
+} */

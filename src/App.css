@@ -1,5 +1,4 @@
 .App {
-  text-align: center;
   color: black;
   background-color: #1A2E40;
 }
@@ -9,6 +8,7 @@
   background-color: #1A2E40;
   color: antiquewhite;
   padding: 30px;
+  text-align: center;
 }
 
 
@@ -16,6 +16,13 @@ div.question{
   background-color: antiquewhite;
 }
 
+div.question > * {
+  margin-left: 10px;
+}
+
+div.question>:nth-child(2){
+  margin-left: 30px;
+}
 div.question h5{
   font-weight: 350;
   color: #1A2E40;
@@ -35,16 +42,25 @@ div .question {
 }
 
 .submit {
+  padding-top: 5px;
   padding-bottom: 15px;
+  text-align: center;
 }
+
 div.submissionError h5{
   background-color: lightcoral;
   font-weight: 450;
-  margin-top: 20px;
 }
 
 .retake{
-  padding-bottom: 15px;
+  margin-right: 20px;
+}
+
+.submission-options{
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  padding-bottom: 20px;
 }
 
 h4, h5, h6{

@@ -1,15 +1,13 @@
-/* .wrong {
-    background-color: lightcoral;
-}
-
-.correct {
-    background-color: lightgreen;
-} */
-
-
 .radios {
     margin-bottom: 0px;
 }
+
+.radios-wrapper{
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: flex-start;
+}
+
 *{
     font-weight: 400;
 }

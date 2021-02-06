@@ -4,7 +4,9 @@ import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup"
 import Form from "react-bootstrap/Form"
 import "./Dropdown.css"
-
+import xmark from "../../../assets/x.svg";
+import checkmark from "../../../assets/check.svg"; 
+import InputGroup from "react-bootstrap/InputGroup"
 
 class DropdownQuestion extends React.Component {  
     render() {
@@ -35,23 +37,41 @@ class DropdownQuestion extends React.Component {
         else {
             if (this.props.selected === this.props.answer){
                 components.push (
-                    <Form.Group className = "formgroup correctDropdown">
-                        <h6>Correct Answer</h6>
-                        <Form.Control placeholder = {this.props.selected}  disabled />
-                    </Form.Group>
+                    <InputGroup className = "mb3 dropdown-display">
+                        <Form.Control placeholder = {this.props.answerChoices[this.props.selected]}   disabled 
+                        aria-label="Default"
+                        aria-describedby="inputGroup-sizing-default"
+                        />
+                        <InputGroup.Append>
+                                    <InputGroup.Text id="inputGroup-sizing-default"><img src = {checkmark} alt = "checkmark"/></InputGroup.Text>
+                        </InputGroup.Append>
+                    </InputGroup>
                 )
             } else {
                 components.push(
-                        <Form.Group className = "formgroup">
-                            <div className = "userAnswer">
-                                <h6>You Selected:</h6>
-                                <Form.Control placeholder = {this.props.answerChoices[this.props.selected]}  disabled />
-                            </div>
-                            <div className = "correctAnswer">
-                                <h6>Correct Answer:</h6>
-                                <Form.Control placeholder = {this.props.answerChoices[this.props.answer]}  disabled />
-                            </div>
-                        </Form.Group>
+                        <div>
+                            <InputGroup className = "mb3 dropdown-display">
+                                <Form.Control placeholder = {this.props.answerChoices[this.props.selected]}   disabled 
+                                aria-label="Default"
+                                aria-describedby="inputGroup-sizing-default"
+                                />
+                                <InputGroup.Append>
+                                    <InputGroup.Text id="inputGroup-sizing-default"><img src = {xmark} alt = "xmark"/></InputGroup.Text>
+                                </InputGroup.Append>
+                            </InputGroup>
+                            <InputGroup className = "mb3 dropdown-display">
+                                <Form.Control placeholder = {this.props.answerChoices[this.props.answer]}   disabled 
+                                aria-label="Default"
+                                aria-describedby="inputGroup-sizing-default"
+                                />
+                                <InputGroup.Append>
+                                    <InputGroup.Text id = "inputGroup-sizing-default">
+                                        <img src = {checkmark} alt = "checkmark"/>
+                                    </InputGroup.Text>
+                                </InputGroup.Append>
+                            </InputGroup>
+                        </div>
+                        
                 )
                 
             }

@@ -28,7 +28,8 @@ class TrueFalse extends React.Component {
                     True <img src = {this.props.answer ? checkmark : xmark}/></Button>
                     <Button disabled 
                     className = {this.props.answer ? 'incorrectTF' : 'correctTF'}>
-                    False <img src = {this.props.answer ? xmark : checkmark}/></Button>
+                    False <img src = {this.props.answer ? xmark : checkmark}
+                    /></Button>
                 </div>
             )
         }

@@ -9,24 +9,11 @@
     justify-content: space-between;
 }
 
-.correctDropdown{
-    background-color: lightgreen;
+
+.dropdown-display{
     width: 50vh;
     margin: 10px auto;
-    padding: 10px;  
 }
 
-.userAnswer{
-    width: 50vh;
-    margin: 10px auto;
-    padding: 10px;
-    background-color:lightcoral;
-}
 
-.correctAnswer{
-    width: 50vh;
-    margin: 10px auto;
-    padding: 10px;
-    background-color: lightgreen;
-}
 

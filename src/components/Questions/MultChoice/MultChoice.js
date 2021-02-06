@@ -15,8 +15,8 @@ const MultChoice = (props) => {
                         <Form.Check 
                         type="radio"
                         key={`formHorizontalRadios` + (i+1)}
-                        label={<div><strong>{props.answerChoices[i]} (CORRECT SELECTED)</strong> 
-                        <img src = {checkmark}/></div>}
+                        label={<div><strong>{props.answerChoices[i]}</strong> 
+                        <img src = {checkmark} alt = "checkmark"/></div>}
                         name="formHorizontalRadios"
                         disabled = {true}
                         className = 'correct'
@@ -27,8 +27,8 @@ const MultChoice = (props) => {
                         <Form.Check 
                         type="radio"
                         key={`formHorizontalRadios` + (i+1)}
-                        label={<div><strong>{props.answerChoices[i]} (INCORRECT SELECTED)</strong>
-                        <img src = {xmark}/></div>}
+                        label={<div><strong>{props.answerChoices[i]}</strong>
+                        <img src = {xmark} alt = "xmark"/></div>}
                         name="formHorizontalRadios"
                         disabled = {true}
                         className = 'wrong'
@@ -40,8 +40,8 @@ const MultChoice = (props) => {
                     <Form.Check 
                     type="radio"
                     key={`formHorizontalRadios` + (i+1)}
-                    label={<div><strong>{props.answerChoices[i]} (CORRECT ANSWER)</strong>
-                    <img src = {checkmark}/></div>}
+                    label={<div><strong>{props.answerChoices[i]}</strong>
+                    <img src = {checkmark} alt = "checkmark"/></div>}
                     name="formHorizontalRadios"
                     disabled = {true}
                     className = 'correct'
@@ -87,7 +87,11 @@ const MultChoice = (props) => {
     return (
         <Form>
         <Form.Group className = "radios">
-            {components}
+            <div className = "radios-wrapper">
+                <div className = "align-wrapper">
+                {components}
+                </div>
+            </div>
         </Form.Group>
         </Form>
         
