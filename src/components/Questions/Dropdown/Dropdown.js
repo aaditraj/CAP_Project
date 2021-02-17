@@ -37,7 +37,7 @@ class DropdownQuestion extends React.Component {
         else {
             if (this.props.selected === this.props.answer){
                 components.push (
-                    <InputGroup className = "mb3 dropdown-display">
+                    <InputGroup className = "mb3 input-group-display">
                         <Form.Control placeholder = {this.props.answerChoices[this.props.selected]}   disabled 
                         aria-label="Default"
                         aria-describedby="inputGroup-sizing-default"
@@ -50,7 +50,7 @@ class DropdownQuestion extends React.Component {
             } else {
                 components.push(
                         <div>
-                            <InputGroup className = "mb3 dropdown-display">
+                            <InputGroup className = "mb3 input-group-display">
                                 <Form.Control placeholder = {this.props.answerChoices[this.props.selected]}   disabled 
                                 aria-label="Default"
                                 aria-describedby="inputGroup-sizing-default"
@@ -59,7 +59,7 @@ class DropdownQuestion extends React.Component {
                                     <InputGroup.Text id="inputGroup-sizing-default"><img src = {xmark} alt = "xmark"/></InputGroup.Text>
                                 </InputGroup.Append>
                             </InputGroup>
-                            <InputGroup className = "mb3 dropdown-display">
+                            <InputGroup className = "mb3 input-group-display">
                                 <Form.Control placeholder = {this.props.answerChoices[this.props.answer]}   disabled 
                                 aria-label="Default"
                                 aria-describedby="inputGroup-sizing-default"

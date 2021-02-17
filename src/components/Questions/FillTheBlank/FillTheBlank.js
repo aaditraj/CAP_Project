@@ -18,7 +18,7 @@ const FillInBlank  = (props) => {
     } else{
         if (props.correct === 1){
             components.push (
-                <InputGroup className = "mb3 dropdown-display" key = "correctFillBlank">
+                <InputGroup className = "mb3 input-group-display correctFillBlank" key = "correctFillBlank">
                     <Form.Control placeholder = {props.text}   disabled 
                     aria-label="Default"
                     aria-describedby="inputGroup-sizing-default"
@@ -30,8 +30,8 @@ const FillInBlank  = (props) => {
             )
         } else{
             components.push (
-                <div key = "incorrectFillBlank">
-                <InputGroup className = "mb3 dropdown-display">
+                <div key = "incorrectFillBlank" className = "incorrectFillBlank">
+                <InputGroup className = "mb3 input-group-display">
                     <Form.Control placeholder = {props.text}   disabled 
                     aria-label="Default"
                     aria-describedby="inputGroup-sizing-default"
@@ -40,7 +40,7 @@ const FillInBlank  = (props) => {
                         <InputGroup.Text id="inputGroup-sizing-default"><img src = {xmark} alt = "xmark"/></InputGroup.Text>
                     </InputGroup.Append>
                 </InputGroup>
-                <InputGroup className = "mb3 dropdown-display">
+                <InputGroup className = "mb3 input-group-display">
                     <Form.Control placeholder = {props.answer}   disabled 
                     aria-label="Default"
                     aria-describedby="inputGroup-sizing-default"

@@ -3,9 +3,10 @@ import Form from "react-bootstrap/Form";
 import './MultChoice.css'
 import xmark from "../../../assets/x.svg";
 import checkmark from "../../../assets/check.svg";
-
+import { useState } from "react";
 
 const MultChoice = (props) => {
+    const [state, setState] = useState('Hello')
     let components = []
     for (let i = 0; i < 4; i++) {
         if (props.disabled === 'true'){
@@ -19,7 +20,7 @@ const MultChoice = (props) => {
                         <img src = {checkmark} alt = "checkmark"/></div>}
                         name="formHorizontalRadios"
                         disabled = {true}
-                        className = 'correct'
+                        className = 'correct selected'
                         />
                     ) 
                 } else {
@@ -31,7 +32,7 @@ const MultChoice = (props) => {
                         <img src = {xmark} alt = "xmark"/></div>}
                         name="formHorizontalRadios"
                         disabled = {true}
-                        className = 'wrong'
+                        className = 'wrong selected'
                         />
                     )
                 }

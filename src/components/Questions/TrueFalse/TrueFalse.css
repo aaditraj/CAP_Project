@@ -2,7 +2,8 @@
    color: black;
    font-weight: bold;
    border: none;
-   background-color: green;
+   background-color: transparent;
+   border: 2px solid green;
    margin: 0 5px 0 5px; 
 }
 
@@ -10,6 +11,7 @@
     color: black;
     font-weight: bold;
     border: none;
+    background-color: transparent;
+    border: 2px solid red;
     margin: 0 5px 0 5px;
-    background-color: red;
 }

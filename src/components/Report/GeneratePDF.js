@@ -1,10 +1,9 @@
 // services/reportGenerator.js
 
 import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable"
+import "jspdf-autotable";
 
 const generatePDF = questionData => {
-    
     const doc = new jsPDF();
 
     const tableColumn = ["Question Type", "Question", "Answer", "Selected", "Points"];
@@ -35,6 +34,7 @@ const generatePDF = questionData => {
     }
     doc.text(`Score: ${score}/5`, 14, 15);
     doc.save(`results_${dateStr}.pdf`);
+
 };
 
 export default generatePDF;

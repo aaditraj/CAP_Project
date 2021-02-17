@@ -2,6 +2,7 @@ import React from "react";
 import Button from "react-bootstrap/Button"
 import './App.css';
 import firebase from "firebase/app";
+import "firebase/auth";
 import 'firebase/firestore';
 import Jumbotron from "react-bootstrap/Jumbotron";
 import Spinner from "react-bootstrap/Spinner"
@@ -11,12 +12,17 @@ import FillInBlank from "./components/Questions/FillTheBlank/FillTheBlank.js";
 import MultChoice from "./components/Questions/MultChoice/MultChoice.js";
 import TrueFalse from "./components/Questions/TrueFalse/TrueFalse.js"
 import generatePDF from "./components/Report/GeneratePDF.js"
+import LoginPage from "./components/Login/Login"
+// import GetData from "./components/DataFetching/GetData";
+
 class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      take_quiz: false,
       fetched: false,
       submitted: false,
+      score: 0,
       multChoices1: null,
       multQuestion1: null,
       multChoiceState1: null,
@@ -44,22 +50,86 @@ class App extends React.Component {
   }
   
   componentDidMount(){
-    var firebaseApp= firebase.apps[0];
-    this.db = firebaseApp.firestore();
-    var multChosen = Math.floor(Math.random() * 20);
-    this.multRef = this.db.collection("MultipleChoice").doc("" + multChosen);
-    var multChosen2 = Math.floor(Math.random() * 20);
-    while (multChosen2 === multChosen){
-      multChosen2 = Math.floor(Math.random() * 20)
-    }
-    this.multRef2 = this.db.collection("MultipleChoice").doc("" + multChosen2);
-    this.dropdownRef = this.db.collection("DropDown").doc("" + Math.floor((Math.random() * 10)));
-    this.trueFalseRef = this.db.collection("TrueFalse").doc( "" + Math.floor((Math.random() * 10)));
-    this.fillBlankRef = this.db.collection("FillInTheBlank").doc("" + Math.floor((Math.random() * 10)))
-    this.getData();
-  }
+    firebase.auth().onAuthStateChanged(async firebaseUser => {
+      if (firebaseUser) {
+        var firebaseApp = firebase.apps[0]
+        this.db = firebaseApp.firestore()
+        this.readUserRef = this.db.collection("UserData").where(
+          "Email", "==", firebase.auth().currentUser.email)
+        console.log(this.readUserRef)
+        await this.readUserRef.get().then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            console.log(doc.data())
+            this.userData = doc.data();
+            this.writeUserRef = this.db.collection("UserData").doc(doc.id)
+          })
+          this.setState({
+            logged_in: true
+          })
+          var multChosen = Math.floor(Math.random() * 20);
+          this.multRef = this.db.collection("MultipleChoice").doc("" + multChosen);
+          var multChosen2 = Math.floor(Math.random() * 20);
+          while (multChosen2 === multChosen){
+            multChosen2 = Math.floor(Math.random() * 20)
+          }
+          this.multRef2 = this.db.collection("MultipleChoice").doc("" + multChosen2);
+          this.dropdownRef = this.db.collection("DropDown").doc("" + Math.floor((Math.random() * 10)));
+          this.trueFalseRef = this.db.collection("TrueFalse").doc( "" + Math.floor((Math.random() * 10)));
+          this.fillBlankRef = this.db.collection("FillInTheBlank").doc("" + Math.floor((Math.random() * 10)))
+          // GetData(this.state).then((state, data) => {
+          //   this.setState({
+          //     state
+          //   })
+          //   this.multData = data[0];
+          //   this.multData2 = data[1];
+          //   this.dropdownData = data[2];
+          //   this.trueFalseData = data[3];
+          //   this.fillBlankData = data[4];
+          // })
+          this.getQuestionData()
+          
+        }).catch((error) => console.log(error))
+      } else {
+        this.setState({
+          logged_in : false
+        })
+      }
+    })
 
-  getData = async() => {
+  }
+  componentDidUpdate(prevProps, prevState){
+    if (!prevState.take_quiz){
+      if (this.state.take_quiz) {
+        this.setState({
+          logged_in : true
+        })
+        var firebaseApp = firebase.apps[0]
+        this.db = firebaseApp.firestore()
+        var multChosen = Math.floor(Math.random() * 20);
+        this.multRef = this.db.collection("MultipleChoice").doc("" + multChosen);
+        var multChosen2 = Math.floor(Math.random() * 20);
+        while (multChosen2 === multChosen){
+          multChosen2 = Math.floor(Math.random() * 20)
+        }
+        this.multRef2 = this.db.collection("MultipleChoice").doc("" + multChosen2);
+        this.dropdownRef = this.db.collection("DropDown").doc("" + Math.floor((Math.random() * 10)));
+        this.trueFalseRef = this.db.collection("TrueFalse").doc( "" + Math.floor((Math.random() * 10)));
+        this.fillBlankRef = this.db.collection("FillInTheBlank").doc("" + Math.floor((Math.random() * 10)))
+        // GetData(this.state).then((state, data) => {
+        //   this.setState({
+        //     state
+        //   })
+        //   this.multData = data[0];
+        //   this.multData2 = data[1];
+        //   this.dropdownData = data[2];
+        //   this.trueFalseData = data[3];
+        //   this.fillBlankData = data[4];
+        // })
+        this.getQuestionData()
+      }
+    }
+  }
+  getQuestionData = async() => {
     this.setState({
       fetched: false
     })
@@ -130,6 +200,44 @@ class App extends React.Component {
       trueFalseText: e,
     })
   }
+ 
+  handleLogin = (email, password) => {
+    const auth = firebase.auth();
+    const promise = auth.signInWithEmailAndPassword(email, password);
+    promise.catch(e => console.log(e.message))
+    this.setState({
+      take_quiz: true
+    })
+  }
+
+  handleLogout = () => {
+    const auth = firebase.auth();
+    const promise = auth.signOut();
+    promise.catch(e => console.log(e.message))
+    
+  }
+  handleCreate = (firstName, lastName, email, password) => {
+    const auth = firebase.auth();
+    const promise = auth.createUserWithEmailAndPassword(email, password);
+    promise.catch(e => console.log(e.message))
+    promise.then(() =>{
+      this.writeUserRef = firebase.apps[0].firestore().collection("UserData").doc()
+      this.writeUserRef.set(
+        {
+          Name: firstName + " " + lastName,
+          Email: email,
+          Scores: [],
+          Highest_Score: null,
+          Lowest_Score: null,
+          Average: null
+        }
+      )
+      this.setState({
+        take_quiz: true
+      })
+    })
+    
+  }
 
   handleFillBlank = (e) => {
     if (!(e.target.value.match(/^[A-Za-z]+$/)) && 
@@ -174,13 +282,14 @@ class App extends React.Component {
         })
     } else{
       this.setState({
-        multChoiceCorrect1: (this.state.multChoiceState1 === await this.multData.Answer ? 1 : 0)
+        multChoiceCorrect1: (this.state.multChoiceState1 === await this.multData.Answer ? 1 : 0),
+        score: this.state.score + this.state.multChoiceCorrect1
       }, async () => {
         this.setState({
-          multChoiceCorrect2: (this.state.multChoiceState2 === await this.multData2.Answer ? 1 : 0)
+          multChoiceCorrect2: (this.state.multChoiceState2 === await this.multData2.Answer ? 1 : 0),
         }, async () => {
           this.setState({
-            dropdownCorrect: (this.state.dropdownState === await this.dropdownData.Answer ? 1: 0)
+            dropdownCorrect: (this.state.dropdownState === await this.dropdownData.Answer ? 1: 0),
           }, async () => {
             this.setState({
               trueFalseCorrect: (Boolean(this.state.trueFalseText.toLowerCase()) === await this.truefalseData.Answer ? 1: 0),
@@ -189,7 +298,27 @@ class App extends React.Component {
                 fillBlankCorrect: (this.state.fillBlankText.toLowerCase() === await this.fillBlankData.Answer ? 1 : 0),
                 submissionState: 'Processing your submission...', 
                 submitted: true
-              })
+              }, async () => {
+                this.userData.Scores.push(this.state.multChoiceCorrect1
+                  + this.state.multChoiceCorrect2 + this.state.dropdownCorrect + 
+                  this.state.trueFalseCorrect + this.state.fillBlankCorrect)
+                console.log(this.userData.Scores)
+                this.writeUserRef.update({
+                  Scores: this.userData.Scores,
+                  Highest_Score: Math.max(...this.userData.Scores),
+                  Lowest_Score: Math.min(...this.userData.Scores),
+                  Average:  (this.userData.Scores.reduce((a, b) => a + b, 0))/(this.userData.Scores.length)
+                })
+                this.readUserRef = this.db.collection("UserData").where(
+                  "Email", "==", firebase.auth().currentUser.email)
+                console.log(this.readUserRef)
+                await this.readUserRef.get().then((querySnapshot) => {
+                  querySnapshot.forEach((doc) => {
+                    console.log(doc.data())
+                    this.userData = doc.data();
+                  })
+                })
+              }) 
             })
           })
         })
@@ -197,7 +326,7 @@ class App extends React.Component {
     }
     
 }
-  handleTake = () => {
+  handleNewTake = () => {
     this.multRef = this.db.collection("MultipleChoice").doc("" + Math.floor((Math.random() * 10)));
     this.multRef2 = this.db.collection("MultipleChoice").doc("" + Math.floor((Math.random() * 10)));
     while (this.multRef === this.multRef2){
@@ -206,7 +335,7 @@ class App extends React.Component {
     this.dropdownRef = this.db.collection("DropDown").doc("" + Math.floor((Math.random() * 10)))
     this.trueFalseRef = this.db.collection("TrueFalse").doc("" + Math.floor((Math.random() * 10)))
     this.fillBlankRef = this.db.collection("FillInTheBlank").doc("" + Math.floor(Math.random() * 10))
-    this.getData()
+    this.getQuestionData()
     if (this.state.fetched === true){
       this.setState({
         multChoiceState1: null,
@@ -229,152 +358,161 @@ class App extends React.Component {
   }
 
   render = () => {
-    if (this.state.fetched === true){
-      if (this.state.submitted === false){
-        return (
-          <div className="App">
-            <header>
-              <Jumbotron className = "jumbo">
-                <h1>Trivia Time!</h1>
-                <h4>Test your knowledge about FBLA!</h4>
+    if (this.state.logged_in === false){
+      return (
+        <LoginPage onLogin = {this.handleLogin} onCreate = {this.handleCreate}
+        />
+      )
+    } else {
+      if (this.state.fetched) {
+        if (this.state.submitted === false){
+          return (
+            <div className="App">
+              <header>
+                <Jumbotron className = "jumbo">
+                  <div className = "jumbo-flex">
+                  <Button variant = "outline-primary" className = "quiz-to-home"> Back </Button>
+                  <h1>Trivia Time!</h1>
+                  <Button variant = "outline-primary" onClick = {this.handleLogout}>Logout</Button>
+                  </div>
+                  <h4>Test your knowledge about FBLA!</h4>
+                </Jumbotron>
+              </header>
+              <div className = "question dropdown">
+                <h5>1. {this.state.dropdownQuestion}</h5>
+                <DropdownQuestion onSelect = {this.handleDropdownSelect} value = {this.state.dropdownText}
+                  answerChoices = {this.state.dropdownChoices} disabled = 'false'
+                />
+              </div>
+              <div id = "fill-blank" className = "question">
+                <h5>2. {this.state.fillBlankQuestion}</h5>
+                <FillInBlank onChange = {this.handleFillBlank} disabled = 'false'/>
+                <div className = 'fillBlankError'>
+                  <h6>{this.state.fillBlankAnswerState}</h6>
+                </div>
+              </div>
+              <div id = "mult-choice" className = "question">
+                <h5>3. {this.state.multQuestion1}</h5>
+                <MultChoice onSelect = {(i, q) => this.handleMultChoiceSelect(i, q)} disabled = 'false' 
+                answerChoices = {this.state.multChoices1} question = '1'/>
+              </div>
+              <div id = "mult-choice" className = "question">
+                <h5>4. {this.state.multQuestion2}</h5>
+                <MultChoice onSelect = {(i, q) => this.handleMultChoiceSelect(i, q)} disabled = 'false' 
+                answerChoices = {this.state.multChoices2} question = '2'/>
+              </div>
+              <div className = "question dropdown">
+                <h5>5. {this.state.trueFalseQuestion}</h5>
+                <TrueFalse onSelect = {this.handleTrueFalseSelect} value = {this.state.trueFalseText}
+                  disabled = 'false'
+                />
+              </div>
+              <div className = 'submissionError'>
+                <h5>{this.state.submissionState}</h5>
+              </div>
+              <div className = "submit">
+                <Button id = "submit-button"
+                variant = "success" type = "submit" 
+                onClick = {this.handleSubmit}><strong>Submit</strong></Button>
+              </div>
+            </div>
+        )} else {
+          return (
+            <div className = "App submission">
+              <Jumbotron className = 'jumbo App'>
+                <h1>Results</h1>
               </Jumbotron>
-            </header>
-            <div className = "question dropdown">
-              <h5>1. {this.state.dropdownQuestion}</h5>
-              <DropdownQuestion onSelect = {this.handleDropdownSelect} value = {this.state.dropdownText}
-                answerChoices = {this.state.dropdownChoices} disabled = 'false'
-              />
-            </div>
-            <div id = "fill-blank" className = "question">
-              <h5>2. {this.state.fillBlankQuestion}</h5>
-              <FillInBlank onChange = {this.handleFillBlank} disabled = 'false'/>
-              <div className = 'fillBlankError'>
-                <h6>{this.state.fillBlankAnswerState}</h6>
+              <div className = 'question dropdown'>
+                  <h5><strong>{this.state.dropdownCorrect === 1 ? "Correct Answer (1/1)" : "Incorrect Answer (0/1)"}</strong></h5>
+                  <h6>1. {this.state.dropdownQuestion}</h6>
+                  <DropdownQuestion answerChoices = {this.state.dropdownChoices} disabled = 'true'
+                selected = {this.state.dropdownState} answer = {this.dropdownData.Answer}/>
               </div>
+              <div className = 'question fill-blank'>
+                <h5><strong>{this.state.fillBlankCorrect === 1 ? "Correct Answer (1/1)" : "Incorrect Answer (0/1)"}</strong></h5>
+                <h6>2. {this.state.fillBlankQuestion}</h6>
+                <FillInBlank disabled = 'true' text = {this.state.fillBlankText} correct = {this.state.fillBlankCorrect}
+                  answer = {this.fillBlankData.Answer}
+                />
+              </div>
+              <div className = 'question mult-choice'>
+                <h5><strong>{this.state.multChoiceCorrect1 === 1 ? "Correct Answer (1/1)" : "Incorrect Answer (0/1)"}</strong> </h5>
+                <h6>3. {this.state.multQuestion1} </h6>
+                <MultChoice answerChoices = {this.state.multChoices1} disabled = 'true' 
+                selected = {this.state.multChoiceState1}  answer = {this.multData.Answer}
+                />
+              </div>
+              <div className = 'question mult-choice'>
+                <h5><strong>{this.state.multChoiceCorrect2 === 1 ? "Correct Answer (1/1)" : "Incorrect Answer (0/1)"}</strong> </h5>
+                <h6>4. {this.state.multQuestion2} </h6>
+                <MultChoice answerChoices = {this.state.multChoices2} disabled = 'true' 
+                selected = {this.state.multChoiceState2}  answer = {this.multData2.Answer}/>
+              </div>  
+              <div className = 'question trueFalse'>
+                <h5><strong>{this.state.trueFalseCorrect === 1 ? "Correct Answer (1/1)" : "Incorrect Answer (0/1)"}</strong></h5>
+                <h6>5. {this.state.trueFalseQuestion}</h6>
+                <TrueFalse disabled = 'true' answer = {this.truefalseData.Answer}/>
+              </div>
+              <br></br>
+              <div className = "submission-options">
+                <div className = "retake">
+                <Button variant = "secondary" onClick = {this.handleNewTake}>Take Another Quiz</Button>
+                </div>
+                <div className = "export">
+                <Button variant = "warning" onClick = {() => generatePDF([
+                  {
+                    type: "Dropdown",
+                    question: this.state.dropdownQuestion,
+                    answer: this.state.dropdownChoices[this.dropdownData.Answer],
+                    selected: this.state.dropdownChoices[this.state.dropdownState],
+                    points: this.state.dropdownCorrect
+                  },
+                  {
+                    type: "Fill In The Blank",
+                    question: this.state.fillBlankQuestion,
+                    answer: this.fillBlankData.Answer,
+                    selected: this.state.fillBlankText,
+                    points: this.state.fillBlankCorrect
+                  },
+                  {
+                    type: "Multiple Choice",
+                    question: this.state.multQuestion1,
+                    answer: this.state.multChoices1[this.multData.Answer],
+                    selected: this.state.multChoices1[this.state.multChoiceState1],
+                    points: this.state.multChoiceCorrect1
+                  },
+                  {
+                    type: "Multiple Choice",
+                    question: this.state.multQuestion2,
+                    answer: this.state.multChoices2[this.multData2.Answer],
+                    selected: this.state.multChoices2[this.state.multChoiceState2],
+                    points: this.state.multChoiceCorrect2
+                  },
+                  {
+                    type: "True or False",
+                    question: this.state.trueFalseQuestion,
+                    answer: this.truefalseData.Answer ? "True" : "False",
+                    selected: this.state.trueFalseText,
+                    points: this.state.trueFalseCorrect
+                  }
+                ])}>Download Results</Button>
+                </div>
+              </div>     
             </div>
-            <div id = "mult-choice" className = "question">
-              <h5>3. {this.state.multQuestion1}</h5>
-              <MultChoice onSelect = {(i, q) => this.handleMultChoiceSelect(i, q)} disabled = 'false' 
-              answerChoices = {this.state.multChoices1} question = '1'/>
-            </div>
-            <div id = "mult-choice" className = "question">
-              <h5>4. {this.state.multQuestion2}</h5>
-              <MultChoice onSelect = {(i, q) => this.handleMultChoiceSelect(i, q)} disabled = 'false' 
-              answerChoices = {this.state.multChoices2} question = '2'/>
-            </div>
-            <div className = "question dropdown">
-              <h5>5. {this.state.trueFalseQuestion}</h5>
-              <TrueFalse onSelect = {this.handleTrueFalseSelect} value = {this.state.trueFalseText}
-                disabled = 'false'
-              />
-            </div>
-            <div className = 'submissionError'>
-              <h5>{this.state.submissionState}</h5>
-            </div>
-            <div className = "submit">
-              <Button id = "submit-button"
-              variant = "success" type = "submit" 
-              onClick = {this.handleSubmit}><strong>Submit</strong></Button>
-            </div>
-          </div>
-        );
+          )
+        }
       } else {
-
-        return(
-          <div className = "App">
-            <Jumbotron className = 'jumbo App'>
-              <h1>Results</h1>
-            </Jumbotron>
-            <div className = 'question dropdown'>
-              <h5><strong>{this.state.dropdownCorrect === 1 ? "Correct Answer (1/1)" : "Incorrect Answer (0/1)"}</strong></h5>
-              <h6>1. {this.state.dropdownQuestion}</h6>
-              <DropdownQuestion answerChoices = {this.state.dropdownChoices} disabled = 'true'
-              selected = {this.state.dropdownState} answer = {this.dropdownData.Answer}/>
-            </div>
-            <div className = 'question fill-blank'>
-              <h5><strong>{this.state.fillBlankCorrect === 1 ? "Correct Answer (1/1)" : "Incorrect Answer (0/1)"}</strong></h5>
-              <h6>2. {this.state.fillBlankQuestion}</h6>
-              <FillInBlank disabled = 'true' text = {this.state.fillBlankText} correct = {this.state.fillBlankCorrect}
-                answer = {this.fillBlankData.Answer}
-              />
-            </div>
-            <div className = 'question mult-choice'>
-              <h5><strong>{this.state.multChoiceCorrect1 === 1 ? "Correct Answer (1/1)" : "Incorrect Answer (0/1)"}</strong> </h5>
-              <h6>3. {this.state.multQuestion1} </h6>
-              <MultChoice answerChoices = {this.state.multChoices1} disabled = 'true' 
-              selected = {this.state.multChoiceState1}  answer = {this.multData.Answer}
-              />
-            </div>
-            <div className = 'question mult-choice'>
-              <h5><strong>{this.state.multChoiceCorrect2 === 1 ? "Correct Answer (1/1)" : "Incorrect Answer (0/1)"}</strong> </h5>
-              <h6>4. {this.state.multQuestion2} </h6>
-              <MultChoice answerChoices = {this.state.multChoices2} disabled = 'true' 
-              selected = {this.state.multChoiceState2}  answer = {this.multData2.Answer}/>
-            </div>  
-            <div className = 'question trueFalse'>
-              <h5><strong>{this.state.trueFalseCorrect === 1 ? "Correct Answer (1/1)" : "Incorrect Answer (0/1)"}</strong></h5>
-              <h6>5. {this.state.trueFalseQuestion}</h6>
-              <TrueFalse disabled = 'true' answer = {this.truefalseData.Answer}/>
-            </div>
-            <br></br>
-            <div className = "submission-options">
-              <div className = "retake">
-              <Button variant = "secondary" onClick = {this.handleTake}>Take Another Quiz</Button>
-              </div>
-              <div className = "export">
-              <Button variant = "warning" onClick = {() => generatePDF([
-                {
-                  type: "Dropdown",
-                  question: this.state.dropdownQuestion,
-                  answer: this.state.dropdownChoices[this.dropdownData.Answer],
-                  selected: this.state.dropdownChoices[this.state.dropdownState],
-                  points: this.state.dropdownCorrect
-                },
-                {
-                  type: "Fill In The Blank",
-                  question: this.state.fillBlankQuestion,
-                  answer: this.fillBlankData.Answer,
-                  selected: this.state.fillBlankText,
-                  points: this.state.fillBlankCorrect
-                },
-                {
-                  type: "Multiple Choice",
-                  question: this.state.multQuestion1,
-                  answer: this.state.multChoices1[this.multData.Answer],
-                  selected: this.state.multChoices1[this.state.multChoiceState1],
-                  points: this.state.multChoiceCorrect1
-                },
-                {
-                  type: "Multiple Choice",
-                  question: this.state.multQuestion2,
-                  answer: this.state.multChoices2[this.multData2.Answer],
-                  selected: this.state.multChoices2[this.state.multChoiceState2],
-                  points: this.state.multChoiceCorrect2
-                },
-                {
-                  type: "True or False",
-                  question: this.state.trueFalseQuestion,
-                  answer: this.truefalseData.Answer ? "True" : "False",
-                  selected: this.state.trueFalseText,
-                  points: this.state.trueFalseCorrect
-                }
-              ])}>Download Results</Button>
-              </div>
-            </div>
-
-            
+        return (
+          <div>
+            <h1>Loading...</h1>
+            <Spinner animation="border" variant="dark" />
           </div>
         )
       }
-    } else {
-      return (
-        <div>
-          <h1>Loading...</h1>
-          <Spinner animation="border" variant="dark" />
-        </div>
-      );
     }
   }
 }
+
+
 
 export default App;
