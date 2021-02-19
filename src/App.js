@@ -13,16 +13,17 @@ import MultChoice from "./components/Questions/MultChoice/MultChoice.js";
 import TrueFalse from "./components/Questions/TrueFalse/TrueFalse.js"
 import generatePDF from "./components/Report/GeneratePDF.js"
 import LoginPage from "./components/Login/Login"
+import ViewStatistics from "./components/Report/Statistics"
 // import GetData from "./components/DataFetching/GetData";
 
 class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      login_error: false,
       take_quiz: false,
       fetched: false,
       submitted: false,
-      score: 0,
       multChoices1: null,
       multQuestion1: null,
       multChoiceState1: null,
@@ -50,54 +51,38 @@ class App extends React.Component {
   }
   
   componentDidMount(){
+    console.log("Component did mount was called.")
     firebase.auth().onAuthStateChanged(async firebaseUser => {
       if (firebaseUser) {
         var firebaseApp = firebase.apps[0]
         this.db = firebaseApp.firestore()
         this.readUserRef = this.db.collection("UserData").where(
           "Email", "==", firebase.auth().currentUser.email)
-        console.log(this.readUserRef)
         await this.readUserRef.get().then((querySnapshot) => {
           querySnapshot.forEach((doc) => {
-            console.log(doc.data())
             this.userData = doc.data();
             this.writeUserRef = this.db.collection("UserData").doc(doc.id)
           })
           this.setState({
-            logged_in: true
+            logged_in: true,
+            take_quiz: true
           })
-          var multChosen = Math.floor(Math.random() * 20);
-          this.multRef = this.db.collection("MultipleChoice").doc("" + multChosen);
-          var multChosen2 = Math.floor(Math.random() * 20);
-          while (multChosen2 === multChosen){
-            multChosen2 = Math.floor(Math.random() * 20)
-          }
-          this.multRef2 = this.db.collection("MultipleChoice").doc("" + multChosen2);
-          this.dropdownRef = this.db.collection("DropDown").doc("" + Math.floor((Math.random() * 10)));
-          this.trueFalseRef = this.db.collection("TrueFalse").doc( "" + Math.floor((Math.random() * 10)));
-          this.fillBlankRef = this.db.collection("FillInTheBlank").doc("" + Math.floor((Math.random() * 10)))
-          // GetData(this.state).then((state, data) => {
-          //   this.setState({
-          //     state
-          //   })
-          //   this.multData = data[0];
-          //   this.multData2 = data[1];
-          //   this.dropdownData = data[2];
-          //   this.trueFalseData = data[3];
-          //   this.fillBlankData = data[4];
-          // })
-          this.getQuestionData()
           
         }).catch((error) => console.log(error))
       } else {
         this.setState({
-          logged_in : false
+          logged_in : false,
+          written: false,
+          take_quiz: false,
+          login_error: false
         })
       }
     })
+    
 
   }
   componentDidUpdate(prevProps, prevState){
+    console.log("Component did update was called.")
     if (!prevState.take_quiz){
       if (this.state.take_quiz) {
         this.setState({
@@ -130,6 +115,7 @@ class App extends React.Component {
     }
   }
   getQuestionData = async() => {
+    console.log("calling getData.")
     this.setState({
       fetched: false
     })
@@ -204,9 +190,16 @@ class App extends React.Component {
   handleLogin = (email, password) => {
     const auth = firebase.auth();
     const promise = auth.signInWithEmailAndPassword(email, password);
-    promise.catch(e => console.log(e.message))
-    this.setState({
-      take_quiz: true
+    promise.catch(() => {
+      this.setState({login_error: true})
+      this.forceUpdate()
+    })
+    firebase.auth().onAuthStateChanged((firebaseUser) => {
+      if (firebaseUser){
+        this.setState({
+          take_quiz: true
+        })
+      }
     })
   }
 
@@ -220,21 +213,27 @@ class App extends React.Component {
     const auth = firebase.auth();
     const promise = auth.createUserWithEmailAndPassword(email, password);
     promise.catch(e => console.log(e.message))
-    promise.then(() =>{
-      this.writeUserRef = firebase.apps[0].firestore().collection("UserData").doc()
-      this.writeUserRef.set(
-        {
-          Name: firstName + " " + lastName,
-          Email: email,
-          Scores: [],
-          Highest_Score: null,
-          Lowest_Score: null,
-          Average: null
+    firebase.auth().onAuthStateChanged((firebaseUser) => {
+      
+      if (firebaseUser) {
+        this.setState({
+          take_quiz : true
+        })
+        if (!(this.state.written)){
+          this.writeUserRef = firebase.apps[0].firestore().collection("UserData").doc()
+          this.writeUserRef.set({
+            Name: firstName + " " + lastName,
+            Email: email,
+            Scores: [],
+            Highest_Score: null,
+            Lowest_Score: null,
+            Average: null
+          })
         }
-      )
-      this.setState({
-        take_quiz: true
-      })
+        this.setState({
+          written: true
+        })
+      }
     })
     
   }
@@ -283,7 +282,6 @@ class App extends React.Component {
     } else{
       this.setState({
         multChoiceCorrect1: (this.state.multChoiceState1 === await this.multData.Answer ? 1 : 0),
-        score: this.state.score + this.state.multChoiceCorrect1
       }, async () => {
         this.setState({
           multChoiceCorrect2: (this.state.multChoiceState2 === await this.multData2.Answer ? 1 : 0),
@@ -296,8 +294,7 @@ class App extends React.Component {
             }, async() => {
               this.setState({
                 fillBlankCorrect: (this.state.fillBlankText.toLowerCase() === await this.fillBlankData.Answer ? 1 : 0),
-                submissionState: 'Processing your submission...', 
-                submitted: true
+                submissionState: <Alert variant="info" >Processing your submission...</Alert>
               }, async () => {
                 this.userData.Scores.push(this.state.multChoiceCorrect1
                   + this.state.multChoiceCorrect2 + this.state.dropdownCorrect + 
@@ -316,6 +313,9 @@ class App extends React.Component {
                   querySnapshot.forEach((doc) => {
                     console.log(doc.data())
                     this.userData = doc.data();
+                  })
+                  this.setState({
+                    submitted: true
                   })
                 })
               }) 
@@ -361,7 +361,7 @@ class App extends React.Component {
     if (this.state.logged_in === false){
       return (
         <LoginPage onLogin = {this.handleLogin} onCreate = {this.handleCreate}
-        />
+        error = {this.state.login_error}/>
       )
     } else {
       if (this.state.fetched) {
@@ -370,13 +370,10 @@ class App extends React.Component {
             <div className="App">
               <header>
                 <Jumbotron className = "jumbo">
-                  <div className = "jumbo-flex">
-                  <Button variant = "outline-primary" className = "quiz-to-home"> Back </Button>
-                  <h1>Trivia Time!</h1>
-                  <Button variant = "outline-primary" onClick = {this.handleLogout}>Logout</Button>
-                  </div>
-                  <h4>Test your knowledge about FBLA!</h4>
+                  <h1>Welcome, {this.userData.Name.split(" ")[0]}</h1>
+                  <h4>Are you an FBLA Expert?</h4>
                 </Jumbotron>
+                <Button variant = "outline-primary" onClick = {this.handleLogout}>Logout</Button>
               </header>
               <div className = "question dropdown">
                 <h5>1. {this.state.dropdownQuestion}</h5>
@@ -419,9 +416,12 @@ class App extends React.Component {
         )} else {
           return (
             <div className = "App submission">
-              <Jumbotron className = 'jumbo App'>
-                <h1>Results</h1>
-              </Jumbotron>
+              <header>
+                <Jumbotron className = "jumbo">
+                  <h1>Results</h1>
+                </Jumbotron>
+                <Button variant = "outline-primary" onClick = {this.handleLogout}>Logout</Button>
+              </header>
               <div className = 'question dropdown'>
                   <h5><strong>{this.state.dropdownCorrect === 1 ? "Correct Answer (1/1)" : "Incorrect Answer (0/1)"}</strong></h5>
                   <h6>1. {this.state.dropdownQuestion}</h6>
@@ -496,6 +496,9 @@ class App extends React.Component {
                     points: this.state.trueFalseCorrect
                   }
                 ])}>Download Results</Button>
+                <ViewStatistics highScore = {this.userData.Highest_Score}
+                  lowestScore = {this.userData.Lowest_Score} average = {this.userData.Average}
+                />
                 </div>
               </div>     
             </div>

@@ -1,9 +1,18 @@
 .login-textbox{
     width: 50vh;
 }
+
+.password-info {
+    font-size: 1rem;
+}
+
 .done{
     margin-right: 10px;
 }
 Button.Login{
     margin-right: 10px;
+}
+
+.login-h6{
+    font-weight: bold;
 }

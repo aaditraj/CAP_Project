@@ -12,11 +12,11 @@
   text-align: center;
 }
 
-.jumbo .jumbo-flex{
-  display: flex;
-  justify-content: space-between;
+header> :nth-child(2){
+  position: absolute;
+  right: 10px;
+  top: 5px
 }
-
 
 
 div.question{
@@ -60,6 +60,10 @@ div.submissionError h5{
 }
 
 .retake{
+  margin-right: 20px;
+}
+
+.export Button{
   margin-right: 20px;
 }
 

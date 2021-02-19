@@ -1,19 +1,10 @@
 {
-  "description": "CAP Project",
+  "description": "FBLA Expert",
   "author": "Aaditya Raj",
-  "build": {
-    "appId": "com.cap_project",
-    "files": [
-      "build/**/*",
-      "node_modules/**/*"
-    ],
-    "win": {
-      "target": "NSIS"
-    }
-  },
   "main": "public/electron.js",
   "homepage": "./",
-  "name": "cap_project",
+  "name": "fbla_expert",
+  "productName": "FBLA Expert",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -25,34 +16,26 @@
     "electron-is-dev": "^1.2.0",
     "electron-squirrel-startup": "^1.0.0",
     "firebase": "^8.2.1",
+    "jquery": "^3.5.1",
     "jspdf": "^2.3.0",
     "jspdf-autotable": "^3.5.13",
+    "popper.js": "^1.16.1",
     "react": "^17.0.1",
     "react-bootstrap": "^1.4.0",
     "react-dom": "^17.0.1",
-    "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.1",
     "wait-on": "^5.2.1",
     "web-vitals": "^0.2.4"
   },
-  "peerDependencies" : {
-    "react" : "^17.0.1",
-    "react-dom" : "^17.0.1"
-  },
-  
   "scripts": {
     "react-start": "react-scripts start",
     "react-build": "react-scripts build",
+    "electron-build": "electron-builder -mwl",
     "react-test": "react-scripts test --env=jsdom",
     "react-eject": "react-scripts eject",
-    "electron-build": "electron-builder",
     "release": "yarn react-build && electron-builder --publish=always",
     "build": "yarn react-build && yarn electron-build",
-    "start": "concurrently \"cross-env BROWSER=none yarn react-start\" \"wait-on http://localhost:3000 && electron .\"",
-    "package": "electron-forge package",
-    "make": "electron-forge make",
-    "preelectron-pack": "npm run build",
-    "electron-pack": "build --win --macos -c.extraMetadata.main=build/electron.js"
+    "start": "concurrently \"cross-env BROWSER=none yarn react-start\" \"wait-on http://localhost:3000 && electron .\""
   },
   "eslintConfig": {
     "extends": [
@@ -73,40 +56,12 @@
     ]
   },
   "devDependencies": {
-    "@electron-forge/cli": "^6.0.0-beta.54",
-    "@electron-forge/maker-deb": "^6.0.0-beta.54",
-    "@electron-forge/maker-rpm": "^6.0.0-beta.54",
-    "@electron-forge/maker-squirrel": "^6.0.0-beta.54",
-    "@electron-forge/maker-zip": "^6.0.0-beta.54",
     "cross-env": "^7.0.3",
-    "electron": "^11.1.1",
-    "electron-builder": "^22.9.1"
+    "electron-builder": "^22.9.1",
+    "electron": "^11.2.3"
   },
-  "config": {
-    "forge": {
-      "packagerConfig": {},
-      "makers": [
-        {
-          "name": "@electron-forge/maker-squirrel",
-          "config": {
-            "name": "cap_project"
-          }
-        },
-        {
-          "name": "@electron-forge/maker-zip",
-          "platforms": [
-            "darwin"
-          ]
-        },
-        {
-          "name": "@electron-forge/maker-deb",
-          "config": {}
-        },
-        {
-          "name": "@electron-forge/maker-rpm",
-          "config": {}
-        }
-      ]
-    }
+  "build": {
+    "appId": "com.fbla_expert",
+    "buildResources": "assets/logo"
   }
 }
