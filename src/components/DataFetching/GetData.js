@@ -1,20 +1,29 @@
 import firebase from 'firebase';
 
 export default async function GetData(props) {  
-    var state = props;
-    const data = [];
-    var firebaseApp= firebase.apps[0];
-    var db = firebaseApp.firestore();
-    var multChosen = Math.floor(Math.random() * 20);
-    var multRef = db.collection("MultipleChoice").doc("" + multChosen);
-    var multChosen2 = Math.floor(Math.random() * 20);
+    let state = props;
+    let data = [];
+    let firebaseApp= firebase.apps[0];
+    let db = firebaseApp.firestore();
+    let multChosen = Math.floor(Math.random() * 20);
+    let multRef = db.collection("MultipleChoice").doc("" + multChosen);
+    let multChosen2 = Math.floor(Math.random() * 20);
     while (multChosen2 === multChosen){
       multChosen2 = Math.floor(Math.random() * 20)
     }
-    var multRef2 = db.collection("MultipleChoice").doc("" + multChosen2);
-    var dropdownRef = db.collection("DropDown").doc("" + Math.floor((Math.random() * 10)));
-    var trueFalseRef = db.collection("TrueFalse").doc( "" + Math.floor((Math.random() * 10)));
-    var fillBlankRef = db.collection("FillInTheBlank").doc("" + Math.floor((Math.random() * 10)))
+    let multRef2 = db.collection("MultipleChoice").doc("" + multChosen2);
+    let dropdownRef = db.collection("DropDown").doc("" + Math.floor((Math.random() * 10)));
+    let trueFalseRef = db.collection("TrueFalse").doc( "" + Math.floor((Math.random() * 10)));
+    let fillBlankRef = db.collection("FillInTheBlank").doc("" + Math.floor((Math.random() * 10)))
+
+    let multipleChoice = await multRef.get()
+    let multipleChoice2 = await multRef2.get()
+    let dropdown = await dropdownRef.get()
+    let trueFalse = trueFalseRef.get()
+    let fillInTheBlank = fillBlankRef.get()
+
+
+
     await multRef.get().then(async (doc) => {
       if (doc.exists) {
         data.push(doc.data())
