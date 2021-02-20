@@ -418,38 +418,39 @@ class App extends React.Component {
             <div className = "App submission">
               <header>
                 <Jumbotron className = "jumbo">
-                  <h1>Results</h1>
+                  <h1>FBLA Expert</h1>
+                  <h4>Results</h4>
                 </Jumbotron>
                 <Button variant = "outline-primary" onClick = {this.handleLogout}>Logout</Button>
               </header>
               <div className = 'question dropdown'>
-                  <h5><strong>{this.state.dropdownCorrect === 1 ? "Correct Answer (1/1)" : "Incorrect Answer (0/1)"}</strong></h5>
+                  <h5><strong>{this.state.dropdownCorrect === 1 ? "Correct Answer" : "Incorrect Answer"}</strong></h5>
                   <h6>1. {this.state.dropdownQuestion}</h6>
                   <DropdownQuestion answerChoices = {this.state.dropdownChoices} disabled = 'true'
                 selected = {this.state.dropdownState} answer = {this.dropdownData.Answer}/>
               </div>
               <div className = 'question fill-blank'>
-                <h5><strong>{this.state.fillBlankCorrect === 1 ? "Correct Answer (1/1)" : "Incorrect Answer (0/1)"}</strong></h5>
+                <h5><strong>{this.state.fillBlankCorrect === 1 ? "Correct Answer" : "Incorrect Answer"}</strong></h5>
                 <h6>2. {this.state.fillBlankQuestion}</h6>
                 <FillInBlank disabled = 'true' text = {this.state.fillBlankText} correct = {this.state.fillBlankCorrect}
                   answer = {this.fillBlankData.Answer}
                 />
               </div>
               <div className = 'question mult-choice'>
-                <h5><strong>{this.state.multChoiceCorrect1 === 1 ? "Correct Answer (1/1)" : "Incorrect Answer (0/1)"}</strong> </h5>
+                <h5><strong>{this.state.multChoiceCorrect1 === 1 ? "Correct Answer" : "Incorrect Answer"}</strong> </h5>
                 <h6>3. {this.state.multQuestion1} </h6>
                 <MultChoice answerChoices = {this.state.multChoices1} disabled = 'true' 
                 selected = {this.state.multChoiceState1}  answer = {this.multData.Answer}
                 />
               </div>
               <div className = 'question mult-choice'>
-                <h5><strong>{this.state.multChoiceCorrect2 === 1 ? "Correct Answer (1/1)" : "Incorrect Answer (0/1)"}</strong> </h5>
+                <h5><strong>{this.state.multChoiceCorrect2 === 1 ? "Correct Answer" : "Incorrect Answer"}</strong> </h5>
                 <h6>4. {this.state.multQuestion2} </h6>
                 <MultChoice answerChoices = {this.state.multChoices2} disabled = 'true' 
                 selected = {this.state.multChoiceState2}  answer = {this.multData2.Answer}/>
               </div>  
               <div className = 'question trueFalse'>
-                <h5><strong>{this.state.trueFalseCorrect === 1 ? "Correct Answer (1/1)" : "Incorrect Answer (0/1)"}</strong></h5>
+                <h5><strong>{this.state.trueFalseCorrect === 1 ? "Correct Answer" : "Incorrect Answer"}</strong></h5>
                 <h6>5. {this.state.trueFalseQuestion}</h6>
                 <TrueFalse disabled = 'true' answer = {this.truefalseData.Answer}/>
               </div>
