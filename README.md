@@ -10,14 +10,17 @@ This application, ‘FBLA Expert’, can be installed and run on Mac or Windows.
 
 ### Description: ###
 
-This program that generates a random five-question quiz from a Firebase Cloud Firestore database. New users must first create an account with their first name, last name, email, and a strong password. Existing users must login, upon which they will be taken to the quiz page. The quiz page contains a welcome message and a five-question quiz. Question types include dropdown, fill-in-the-blank, multiple choice, and true-or-false. After completing the quiz and submitting, users are taken to a results page which displays the results for their quiz. This page contains the option to take the quiz again, download the current quiz results, and view statistics associated with their account, such as their average quiz score, highest score, and lowest score. Both of these pages contain the option to logout.
+This program generates a random five-question quiz about FBLA. Question types include dropdown, fill-in-the-blank, multiple choice, and true-or-false. New users must first create an account with their first name, last name, email, and a strong password. Existing users must login, upon which they will be taken to the quiz page. After submitting the quiz, users are taken to a results page. This page also contains the option to take another quiz, download the current quiz results, and view quiz statistics associated with the user's account.
 
 
 ### Features: ###
-- Login system
-- Take a five-question quiz
-- Download quiz results
+- Login system that uses Firebase Authentication
+- Five-question quiz generated from a Firebase Cloud Firestore database
+- Download quiz results as a PDF
 - View quiz statistics for a user
+  - average score
+  - highest score
+  - lowest score
 
 
 ### Future Enhancements: ###
