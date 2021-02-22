@@ -1,9 +1,28 @@
+.login-wrapper{
+    display: flex;
+    justify-content: center;
+}
+
+
+.card-header h2{
+    text-align: center;
+}
+
 .login-textbox{
+    width: 40vh;
+}
+
+.create-textbox{
     width: 50vh;
 }
 
+
 .password-info {
     font-size: 1rem;
+}
+
+Button.sign-up{
+    text-decoration: underline;
 }
 
 .done{

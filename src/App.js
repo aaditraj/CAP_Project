@@ -1,9 +1,9 @@
 import React from "react";
 import Button from "react-bootstrap/Button"
-import './App.css';
+import "./App.css";
 import firebase from "firebase/app";
 import "firebase/auth";
-import 'firebase/firestore';
+import "firebase/firestore";
 import Jumbotron from "react-bootstrap/Jumbotron";
 import Spinner from "react-bootstrap/Spinner"
 import Alert from "react-bootstrap/Alert";
@@ -14,13 +14,15 @@ import TrueFalse from "./components/Questions/TrueFalse/TrueFalse.js"
 import generatePDF from "./components/Report/GeneratePDF.js"
 import LoginPage from "./components/Login/Login"
 import ViewStatistics from "./components/Report/Statistics"
-// import GetData from "./components/DataFetching/GetData";
-
+import GetQuestionData from "./components/DataFetching/GetQuestionData";
+import GetUserData from "./components/DataFetching/GetUserData";
+import WriteNewUserData from "./components/Login/CreateAccount"
 class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      login_error: false,
+      invalid_login: false,
+      create_error: false,
       take_quiz: false,
       fetched: false,
       submitted: false,
@@ -51,30 +53,23 @@ class App extends React.Component {
   }
   
   componentDidMount(){
-    console.log("Component did mount was called.")
     firebase.auth().onAuthStateChanged(async firebaseUser => {
       if (firebaseUser) {
-        var firebaseApp = firebase.apps[0]
-        this.db = firebaseApp.firestore()
-        this.readUserRef = this.db.collection("UserData").where(
-          "Email", "==", firebase.auth().currentUser.email)
-        await this.readUserRef.get().then((querySnapshot) => {
-          querySnapshot.forEach((doc) => {
-            this.userData = doc.data();
-            this.writeUserRef = this.db.collection("UserData").doc(doc.id)
-          })
+        GetUserData().then((data) => {
+          this.userData = data[0]
+          this.writeUserRef = data[1]
           this.setState({
             logged_in: true,
             take_quiz: true
           })
-          
-        }).catch((error) => console.log(error))
+        })
       } else {
         this.setState({
           logged_in : false,
           written: false,
           take_quiz: false,
-          login_error: false
+          invalid_login: false,
+          create_error: false
         })
       }
     })
@@ -88,91 +83,32 @@ class App extends React.Component {
         this.setState({
           logged_in : true
         })
-        var firebaseApp = firebase.apps[0]
-        this.db = firebaseApp.firestore()
-        var multChosen = Math.floor(Math.random() * 20);
-        this.multRef = this.db.collection("MultipleChoice").doc("" + multChosen);
-        var multChosen2 = Math.floor(Math.random() * 20);
-        while (multChosen2 === multChosen){
-          multChosen2 = Math.floor(Math.random() * 20)
-        }
-        this.multRef2 = this.db.collection("MultipleChoice").doc("" + multChosen2);
-        this.dropdownRef = this.db.collection("DropDown").doc("" + Math.floor((Math.random() * 10)));
-        this.trueFalseRef = this.db.collection("TrueFalse").doc( "" + Math.floor((Math.random() * 10)));
-        this.fillBlankRef = this.db.collection("FillInTheBlank").doc("" + Math.floor((Math.random() * 10)))
-        // GetData(this.state).then((state, data) => {
-        //   this.setState({
-        //     state
-        //   })
-        //   this.multData = data[0];
-        //   this.multData2 = data[1];
-        //   this.dropdownData = data[2];
-        //   this.trueFalseData = data[3];
-        //   this.fillBlankData = data[4];
-        // })
-        this.getQuestionData()
-      }
-    }
-  }
-  getQuestionData = async() => {
-    console.log("calling getData.")
-    this.setState({
-      fetched: false
-    })
-    await this.multRef.get().then(async (doc) => {
-      if (doc.exists) {
-        this.multData = doc.data()
-        this.setState({
-          multChoices1: doc.data().Choices,
-          multQuestion1: doc.data().Question,
-        }) 
-        await this.multRef2.get().then(async (doc) => {
-          if (doc.exists) {
-            this.multData2 = doc.data()
-            this.setState({
-              multChoices2: doc.data().Choices,
-              multQuestion2: doc.data().Question,
-            })
-            await this.dropdownRef.get().then(async (doc) => {
-              if (doc.exists) {
-                this.dropdownData = doc.data()
-                this.setState({
-                  dropdownChoices: doc.data().Choices,
-                  dropdownQuestion: doc.data().Question,
-                })
-                await this.trueFalseRef.get().then(async (doc) => {
-                  if (doc.exists) {
-                    this.truefalseData = doc.data()
-                    this.setState({
-                      trueFalseQuestion: doc.data().Question
-                    })
-                    await this.fillBlankRef.get().then(async (doc) => {
-                      if (doc.exists) {
-                        this.fillBlankData = doc.data()
-                        this.setState({
-                          fetched: true,
-                          fillBlankQuestion: doc.data().Question
-                        })
-                      }
-                    }).catch(function(error){
-                      console.log("Error getting document:", error)
-                    })
-                  }
-                }).catch(function(error) {
-                  console.log("Error getting document:", error)
-                })
-              }
-            }).catch(function(error) {
-              console.log("Error getting document:", error);
-            });
-          }
-        }).catch(function(error) {
-          console.log("Error getting document:", error)
+        GetQuestionData(this.state).then((data) => {
+          var state = data[0]
+          this.setState({
+            multChoices1: state.multChoices1,
+            multQuestion1: state.multQuestion1,
+            multChoices2: state.multChoices2,
+            multQuestion2: state.multQuestion2,
+            dropdownChoices: state.dropdownChoices,
+            dropdownQuestion: state.dropdownQuestion,
+            trueFalseQuestion: state.trueFalseQuestion,
+            fillBlankQuestion: state.fillBlankQuestion,
+            fetched: state.fetched
+          }, () => {
+          console.log(this.state)
+          var questionData = data[1]
+          this.multData = questionData.get('multipleChoice');
+          this.multData2 = questionData.get('multipleChoice2');
+          this.dropdownData = questionData.get('dropdown');
+          this.trueFalseData = questionData.get('trueFalse');
+          this.fillBlankData = questionData.get('fillInTheBlank');
+          console.log(this.multData.Answer)
+          })
+          
         })
       }
-    }).catch(function(error) {
-        console.log("Error getting document:", error);
-    }); 
+    }
   }
   handleDropdownSelect = (i, e) => {
     this.setState({
@@ -187,20 +123,26 @@ class App extends React.Component {
     })
   }
  
-  handleLogin = (email, password) => {
-    const auth = firebase.auth();
-    const promise = auth.signInWithEmailAndPassword(email, password);
-    promise.catch(() => {
-      this.setState({login_error: true})
-      this.forceUpdate()
-    })
-    firebase.auth().onAuthStateChanged((firebaseUser) => {
-      if (firebaseUser){
-        this.setState({
-          take_quiz: true
-        })
-      }
-    })
+  handleLogin = (email, password, missingInfo) => {
+    if (missingInfo){
+      this.setState({
+        invalid_login : false
+      })
+    } else {
+      const auth = firebase.auth();
+      const promise = auth.signInWithEmailAndPassword(email, password);
+      promise.catch(() => {
+        this.setState({invalid_login: true})
+        // this.forceUpdate()
+      })
+      firebase.auth().onAuthStateChanged((firebaseUser) => {
+        if (firebaseUser){
+          this.setState({
+            take_quiz: true
+          })
+        }
+      })
+    }
   }
 
   handleLogout = () => {
@@ -212,7 +154,9 @@ class App extends React.Component {
   handleCreate = (firstName, lastName, email, password) => {
     const auth = firebase.auth();
     const promise = auth.createUserWithEmailAndPassword(email, password);
-    promise.catch(e => console.log(e.message))
+    promise.catch(
+      this.setState({create_error: true})
+    )
     firebase.auth().onAuthStateChanged((firebaseUser) => {
       
       if (firebaseUser) {
@@ -220,15 +164,7 @@ class App extends React.Component {
           take_quiz : true
         })
         if (!(this.state.written)){
-          this.writeUserRef = firebase.apps[0].firestore().collection("UserData").doc()
-          this.writeUserRef.set({
-            Name: firstName + " " + lastName,
-            Email: email,
-            Scores: [],
-            Highest_Score: null,
-            Lowest_Score: null,
-            Average: null
-          })
+          WriteNewUserData(firstName, lastName, email)
         }
         this.setState({
           written: true
@@ -290,7 +226,7 @@ class App extends React.Component {
             dropdownCorrect: (this.state.dropdownState === await this.dropdownData.Answer ? 1: 0),
           }, async () => {
             this.setState({
-              trueFalseCorrect: (Boolean(this.state.trueFalseText.toLowerCase()) === await this.truefalseData.Answer ? 1: 0),
+              trueFalseCorrect: (Boolean(this.state.trueFalseText.toLowerCase()) === await this.trueFalseData.Answer ? 1: 0),
             }, async() => {
               this.setState({
                 fillBlankCorrect: (this.state.fillBlankText.toLowerCase() === await this.fillBlankData.Answer ? 1 : 0),
@@ -327,33 +263,47 @@ class App extends React.Component {
     
 }
   handleNewTake = () => {
-    this.multRef = this.db.collection("MultipleChoice").doc("" + Math.floor((Math.random() * 10)));
-    this.multRef2 = this.db.collection("MultipleChoice").doc("" + Math.floor((Math.random() * 10)));
-    while (this.multRef === this.multRef2){
-      this.multRef2 = this.db.collection("MultipleChoice").doc("" + Math.floor((Math.random() * 10)));
-    }
-    this.dropdownRef = this.db.collection("DropDown").doc("" + Math.floor((Math.random() * 10)))
-    this.trueFalseRef = this.db.collection("TrueFalse").doc("" + Math.floor((Math.random() * 10)))
-    this.fillBlankRef = this.db.collection("FillInTheBlank").doc("" + Math.floor(Math.random() * 10))
-    this.getQuestionData()
-    if (this.state.fetched === true){
+    GetQuestionData(this.state).then((data) => {
+      var state = data[0]
       this.setState({
-        multChoiceState1: null,
-        multChoiceCorrect1: 0,
-        multChoiceState2: null,
-        multChoiceCorrect2: 0,
-        dropdownText: 'Choose',
-        dropdownState: null,
-        dropdownCorrect: 0,
-        fillBlankCorrect: 0,
-        fillBlankText: '',
-        trueFalseText: 'True/False',
-        trueFalseCorrect: 0,
-        submissionState: null,
-        submitted: false,
-        fillBlankError: false,
-        fillBlankAnswerState: null,
-      })
+        multChoices1: state.multChoices1,
+        multQuestion1: state.multQuestion1,
+        multChoices2: state.multChoices2,
+        multQuestion2: state.multQuestion2,
+        dropdownChoices: state.dropdownChoices,
+        dropdownQuestion: state.dropdownQuestion,
+        trueFalseQuestion: state.trueFalseQuestion,
+        fillBlankQuestion: state.fillBlankQuestion,
+        fetched: state.fetched
+      }, () => {
+      console.log(this.state)
+      var questionData = data[1]
+      this.multData = questionData.get('multipleChoice');
+      this.multData2 = questionData.get('multipleChoice2');
+      this.dropdownData = questionData.get('dropdown');
+      this.trueFalseData = questionData.get('trueFalse');
+      this.fillBlankData = questionData.get('fillInTheBlank');
+      console.log(this.multData.Answer)
+     })
+    })
+      if (this.state.fetched === true){
+        this.setState({
+          multChoiceState1: null,
+          multChoiceCorrect1: 0,
+          multChoiceState2: null,
+          multChoiceCorrect2: 0,
+          dropdownText: 'Choose',
+          dropdownState: null,
+          dropdownCorrect: 0,
+          fillBlankCorrect: 0,
+          fillBlankText: '',
+          trueFalseText: 'True/False',
+          trueFalseCorrect: 0,
+          submissionState: null,
+          submitted: false,
+          fillBlankError: false,
+          fillBlankAnswerState: null,
+        })
     }
   }
 
@@ -361,7 +311,7 @@ class App extends React.Component {
     if (this.state.logged_in === false){
       return (
         <LoginPage onLogin = {this.handleLogin} onCreate = {this.handleCreate}
-        error = {this.state.login_error}/>
+        error = {this.state.invalid_login} create_error = {this.state.create_error}/>
       )
     } else {
       if (this.state.fetched) {
@@ -452,7 +402,7 @@ class App extends React.Component {
               <div className = 'question trueFalse'>
                 <h5><strong>{this.state.trueFalseCorrect === 1 ? "Correct Answer" : "Incorrect Answer"}</strong></h5>
                 <h6>5. {this.state.trueFalseQuestion}</h6>
-                <TrueFalse disabled = 'true' answer = {this.truefalseData.Answer}/>
+                <TrueFalse disabled = 'true' answer = {this.trueFalseData.Answer}/>
               </div>
               <br></br>
               <div className = "submission-options">
@@ -492,7 +442,7 @@ class App extends React.Component {
                   {
                     type: "True or False",
                     question: this.state.trueFalseQuestion,
-                    answer: this.truefalseData.Answer ? "True" : "False",
+                    answer: this.trueFalseData.Answer ? "True" : "False",
                     selected: this.state.trueFalseText,
                     points: this.state.trueFalseCorrect
                   }

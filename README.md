@@ -1,70 +1,53 @@
-# Getting Started with Create React App
+{\rtf1\ansi\ansicpg1252\cocoartf2577
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica-Bold;\f1\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;}
+{\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid1\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid1}}
+{\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}}
+\margl1440\margr1440\vieww28600\viewh16380\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+\f0\b\fs28 \cf0 Coding and Programming Quiz Application \
 
-## Available Scripts
+\f1\b0\fs24 \
+Aaditya Raj, Homestead High School (9th)\
+\
+\
 
-In the project directory, you can run:
+\f0\b Instructions For Use: \
 
-### `npm start`
+\f1\b0 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \expnd0\expndtw0\kerning0
+This application, 
+\f0\b \'91FBLA Expert\'92
+\f1\b0 , can be installed and run on Mac or Windows. On Mac, if you receive warnings of malicious software preventing the launch, right click the application and click \'91Open\'92. If you receive warnings of malicious software on Windows, disregard those warnings and proceed with launching the app. Internet connection is needed, since the application interfaces with a Cloud database.\
+\cf0 \kerning1\expnd0\expndtw0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+\f0\b Description
+\f1\b0 :\
+\
+This program that generates a random five-question quiz from a Firebase Cloud Firestore database. New users must first create an account with their first name, last name, email, and a strong password. Existing users must login, upon which they will be taken to the quiz page. The quiz page contains a welcome message and a five-question quiz. Question types include dropdown, fill-in-the-blank, multiple choice, and true-or-false. After completing the quiz and submitting, users are taken to a results page which displays the results for their quiz. This page contains the option to take the quiz again, download the current quiz results, and view statistics associated with their account, such as their average quiz score, highest score, and lowest score. Both of these pages contain the option to logout.\
+\
+\
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+\f0\b Features:\
+\pard\tx220\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\fi-720\pardirnatural\partightenfactor0
+\ls1\ilvl0
+\f1\b0 \cf0 {\listtext	\uc0\u8226 	}Login system\
+{\listtext	\uc0\u8226 	}Take a five-question quiz \
+{\listtext	\uc0\u8226 	}Download quiz results\
+{\listtext	\uc0\u8226 	}View quiz statistics for a user\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\
 
-### `npm test`
+\f0\b Future Enhancements:\
+\
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+\f1\b0 The app can be enhanced in the future based on intended use. For example, viewing and downloading past quiz reports could be a useful feature. \
+\
+\
+}

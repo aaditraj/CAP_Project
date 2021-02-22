@@ -12,10 +12,11 @@ class LoginPage extends React.Component {
         this.state = {
             create : false,
             login_error: null,
-            password_info : null,
+            password_security : null,
             message: null,
             new_email: null,
             new_password: null,
+            retype_password: null,
             login_email: null,
             login_pw: null,
             firstName: null,
@@ -26,19 +27,27 @@ class LoginPage extends React.Component {
         if (!(prevProps.error)) {
             if (this.props.error){
                 this.setState({
-                    login_error: <Alert variant = "danger">Invalid Login</Alert>
+                    login_error: <Alert variant = "danger">Invalid login</Alert>
                 })
                 this.forceUpdate()
             }
         }    
+        if (!(prevProps.create_error)) {
+            if (this.props.create_error){
+                this.setState({
+                    message: <Alert variant = "danger">An account like this already exists.</Alert>
+                })
+                this.forceUpdate()
+            }
+        }
     }
     handleCreatePasswordChange = (password) => {
         this.setState({
             new_password: password,
-            password_info: <Alert variant = "info"
+            password_security: <Alert variant = "info"
             dismissible 
             onClose = {() => this.setState({
-                password_info: null
+                password_security: null
             })}>Your password must
             <li>Be at least 8 characters long</li>
             <li>Contain at least 2 uppercase letters</li>
@@ -48,7 +57,7 @@ class LoginPage extends React.Component {
             </Alert>
         })
     }
-    handleCreate = (firstName, lastName, email, password) => {
+    handleCreate = (firstName, lastName, email, password, retype) => {
         if (password === null || email === null || firstName === null || lastName === null){
             this.setState({
                 message: <Alert variant="danger" dismissible 
@@ -56,7 +65,15 @@ class LoginPage extends React.Component {
                     message: null
                 })}>Missing information</Alert>
             })
-        } else if (!(password.match(/^.*[A-Z].*[A-Z].*$/))){
+        } else if (password !== retype){
+            this.setState({
+                message: <Alert variant="danger" dismissible 
+                onClose = {() => this.setState({
+                    message: null
+                })}>Passwords are not matching</Alert>
+            })
+        }
+        else if (!(password.match(/^.*[A-Z].*[A-Z].*$/))){
             this.setState({
                 message: <Alert variant="danger" dismissible
                 onClose = {() => this.setState({
@@ -109,7 +126,16 @@ class LoginPage extends React.Component {
         }
     }
     handleLogin = (email, password) => {
-        this.props.onLogin(email, password)
+        if (email !== null && password !== null && 
+            (email.replace(/\s/g, '').length !== 0) && (password.replace(/\s/g, '').length !== 0)){
+            this.props.onLogin(email, password, false)
+        } else {
+            this.setState({
+                login_error: <Alert variant="danger" 
+                >Missing information</Alert>
+            })
+            this.props.onLogin(email, password, true)
+        }
     }
 
     render() {
@@ -121,14 +147,14 @@ class LoginPage extends React.Component {
                         <h4>Test Your Knowledge About FBLA!</h4>
                     </Jumbotron>
                     <Card bg = "light" text = "dark">
-                        <Card.Header><h3>Create an Account</h3></Card.Header>
-                        <Card.Body>
+                        <Card.Header card = "card-header"><h2>Create an Account</h2></Card.Header>
+                        <Card.Body className = "login-wrapper">
                             <Form>
                                 <Form.Group>
                                     <h6 className = 'login-h6'>First Name</h6>
                                     <Form.Control onChange = {(e) => 
                                         this.setState({firstName: e.target.value})} 
-                                    className = "login-textbox" placeholder = "First Name"
+                                    className = "create-textbox" placeholder = "First Name"
                                         autoComplete = "off"
                                     />
                                 </Form.Group>
@@ -136,7 +162,7 @@ class LoginPage extends React.Component {
                                     <h6 className = 'login-h6'>Last Name</h6>
                                     <Form.Control onChange = {(e) =>
                                         this.setState({lastName: e.target.value})} 
-                                    className = "login-textbox" placeholder = "Last Name"
+                                    className = "create-textbox" placeholder = "Last Name"
                                         autoComplete = "off"
                                     />
                                 </Form.Group>
@@ -144,7 +170,7 @@ class LoginPage extends React.Component {
                                     <h6 className = 'login-h6'>Email</h6>
                                     <Form.Control onChange = {(e) => 
                                         this.setState({new_email:  e.target.value})} 
-                                    className = "login-textbox" placeholder = "Email"
+                                    className = "create-textbox" placeholder = "Email"
                                     autoComplete = "off"
                                     />
                                 </Form.Group>
@@ -152,15 +178,23 @@ class LoginPage extends React.Component {
                                     <h6 className = 'login-h6'>Password</h6>
                                     <Form.Control onChange = {(e) =>
                                         this.handleCreatePasswordChange(e.target.value)}
-                                    className = "login-textbox" placeholder = "Password"
+                                    className = "create-textbox" placeholder = "Password"
                                         type = "password" autoComplete = "off"
                                     />
-                                    <h5 className = "password-info">{this.state.password_info}</h5>
+                                    <h5 className = "password-info">{this.state.password_security}</h5>
+                                </Form.Group>
+                                <Form.Group>
+                                    <h6 className = 'login-h6'>Retype Password</h6>
+                                    <Form.Control onChange = {(e) =>
+                                        this.setState({retype_password: e.target.value})}
+                                    className = "create-textbox" placeholder = "Password"
+                                        type = "password" autoComplete = "off"
+                                    />
                                 </Form.Group>
                                 <h5 className = "error-message">{this.state.message}</h5>
                                 <Button onClick = {() =>
                                 this.handleCreate(this.state.firstName, this.state.lastName, this.state.new_email, 
-                                this.state.new_password)}
+                                this.state.new_password, this.state.retype_password)}
                                 className = "done">Done</Button>
                                 <Button onClick = {() => this.setState({create: false})}>Back</Button>
                             </Form>
@@ -176,10 +210,11 @@ class LoginPage extends React.Component {
                         <h4>Test Your Knowledge About FBLA!</h4>
                     </Jumbotron>
                     <Card bg = "light" text = "dark">
-                        <Card.Header><h3>Login</h3></Card.Header>
-                        <Card.Body>
+                        <Card.Header className = "card-header"><h2>Login</h2></Card.Header>
+                        <Card.Body className = "login-wrapper">
                             <Form>
                                 <Form.Group>
+                                    <h6 className = 'login-h6'>Email</h6>
                                     <Form.Control onChange = {(e) =>
                                         this.setState({login_email: e.target.value})} 
                                     className = "login-textbox" placeholder = "Email"
@@ -187,6 +222,7 @@ class LoginPage extends React.Component {
                                     />
                                 </Form.Group>
                                 <Form.Group>
+                                    <h6 className = 'login-h6'>Password</h6>
                                     <Form.Control onChange = {(e) =>
                                         this.setState({login_pw: e.target.value})}
                                     className = "login-textbox" placeholder = "Password"
@@ -196,9 +232,10 @@ class LoginPage extends React.Component {
                                 <h5>{this.state.login_error}</h5>
                                 <Button className = "Login" onClick = {() => 
                                 this.handleLogin(this.state.login_email, this.state.login_pw)}>Login</Button>
-                                <Button onClick = {() => this.setState({
+                                <Button className = "sign-up"
+                                variant = "link" onClick = {() => this.setState({
                                     create: true
-                                })}>Create Account</Button>
+                                })}>Sign Up</Button>
                             </Form>
                         </Card.Body>
                     </Card>
