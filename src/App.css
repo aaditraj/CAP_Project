@@ -3,7 +3,14 @@
   color: black;
   background-color: #1A2E40;
 }
-  
+
+.loading-screen{
+  height: 100vh;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center
+}
 .jumbo{
   margin-bottom: 0;
   background-color: #1A2E40;
