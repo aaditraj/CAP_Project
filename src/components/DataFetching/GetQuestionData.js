@@ -1,6 +1,6 @@
 import firebase from 'firebase';
 
-export default async function GetQuestionData(props) {  
+export default async function GetData(props) {  
     let state = props;
     let questionData = new Map();
     let firebaseApp= firebase.apps[0];
