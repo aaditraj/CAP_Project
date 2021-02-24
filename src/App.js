@@ -78,7 +78,7 @@ class App extends React.Component {
         })
       }
     })
-    
+
 
   }
   componentDidUpdate(prevProps, prevState){
@@ -191,6 +191,8 @@ class App extends React.Component {
     const auth = firebase.auth();
     const promise = auth.signInWithEmailAndPassword(email, password);
     promise.catch(() => {
+      this.setState({login_error: false})
+      this.forceUpdate()
       this.setState({login_error: true})
       this.forceUpdate()
     })

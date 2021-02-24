@@ -9,13 +9,16 @@ import "./Login.css"
 class LoginPage extends React.Component {
     constructor(props) {
         super(props);
+        this.passwordInfo = <Button size = 'sm' onClick = {this.popPasswordRules}
+        variant = "link">Password Rules</Button>
         this.state = {
             create : false,
             login_error: null,
-            password_info : null,
+            password_info : this.passwordInfo,
             message: null,
             new_email: null,
             new_password: null,
+            retype_password: null,
             login_email: null,
             login_pw: null,
             firstName: null,
@@ -26,7 +29,8 @@ class LoginPage extends React.Component {
         if (!(prevProps.error)) {
             if (this.props.error){
                 this.setState({
-                    login_error: <Alert variant = "danger">Invalid Login</Alert>
+                    login_error: <Alert variant = "danger" dismissible
+                    onClose = {() => this.setState({login_error: null})}>Invalid Login</Alert>
                 })
                 this.forceUpdate()
             }
@@ -35,11 +39,14 @@ class LoginPage extends React.Component {
     handleCreatePasswordChange = (password) => {
         this.setState({
             new_password: password,
-            password_info: <Alert variant = "info"
-            dismissible 
-            onClose = {() => this.setState({
-                password_info: null
-            })}>Your password must
+        })
+    }
+    
+    popPasswordRules = () => {
+        this.setState({
+            password_info:  <Alert dismissible 
+            onClose = {() => this.setState({password_info : this.passwordInfo})}variant = "secondary"
+            >Your password must:
             <li>Be at least 8 characters long</li>
             <li>Contain at least 2 uppercase letters</li>
             <li>Contain at least one special character</li>
@@ -48,58 +55,49 @@ class LoginPage extends React.Component {
             </Alert>
         })
     }
-    handleCreate = (firstName, lastName, email, password) => {
-        if (password === null || email === null || firstName === null || lastName === null){
+    isFieldEmpty = (field) => {
+        return (field === null || field.replace(/\s/g, '').length === 0)
+    }
+    CreateAlert = (message) => {
+        return <Alert variant="danger" dismissible 
+        onClose = {() => this.setState({
+            message: null
+        })}>{message}</Alert>
+    }
+    handleCreate = (firstName, lastName, email, password, retype) => {
+        if (this.isFieldEmpty(firstName) || this.isFieldEmpty(lastName) || this.isFieldEmpty(email) 
+            || this.isFieldEmpty(password)){
             this.setState({
-                message: <Alert variant="danger" dismissible 
-                onClose = {() => this.setState({
-                    message: null
-                })}>Missing information</Alert>
+                message: this.CreateAlert("All fields are required")
+            })
+        } else if (password !== retype){
+            this.setState({
+                message: this.CreateAlert("Passwords are not matching")
             })
         } else if (!(password.match(/^.*[A-Z].*[A-Z].*$/))){
             this.setState({
-                message: <Alert variant="danger" dismissible
-                onClose = {() => this.setState({
-                  message: null
-                })}>Password must contain at least 2 uppercase letters</Alert>
+                message: this.CreateAlert("Password must contain at least 2 uppercase letters")
             })
         } else if (!(password.match(/^.*[!@#$&*].*$/))){
             this.setState({
-                message: <Alert variant="danger" dismissible
-                onClose = {() => this.setState({
-                  message: null
-                })}>Password must contain at least one special character
-                (!, @, #, etc.)</Alert>
+                message: this.CreateAlert("Password must contain at least one special character (!, @, #, etc.)")
             })
         } else if (!(password.match(/^.*[0-9].*[0-9].*$/))){
             this.setState({
-                message: <Alert variant="danger" dismissible
-                onClose = {() => this.setState({
-                  message: null
-                })}>Password must contain at least 2 digits</Alert>
+                message: this.CreateAlert("Password must contain at least 2 digits")
             })
         } else if (!(password.match(/^.*[a-z].*[a-z].*[a-z].*$/))){
             this.setState({
-                message: <Alert variant="danger" dismissible
-                onClose = {() => this.setState({
-                  message: null
-                })}>Password must contain at least 3 lowercase letters</Alert>
+                message: this.CreateAlert("Password must contain at least 3 lowercase letters")
             })
         } else if (!(password.match(/^.{8,}$/))){
             this.setState({
-                message: <Alert variant="danger" dismissible
-                onClose = {() => this.setState({
-                  message: null
-                })}>Password must have at least 8 characters</Alert>
+                message: this.CreateAlert("Password must contain at least 8 characters")
             })
         } else if (!(email.match(/^\S+@\S+\.\S+$/))) {
             this.setState({
-                message: <Alert variant="danger" dismissible
-                onClose = {() => this.setState({
-                  message: null
-                })}>Invalid email. Check if it is in proper format, with no spaces at the end.</Alert>
+                message: this.CreateAlert("Email is not in proper format")
             })
-        
         }  
         else {
             this.setState({
@@ -109,7 +107,14 @@ class LoginPage extends React.Component {
         }
     }
     handleLogin = (email, password) => {
-        this.props.onLogin(email, password)
+        if (this.isFieldEmpty(email) || this.isFieldEmpty(password)){
+            this.setState({
+                login_error: <Alert variant="danger" dismissible 
+                onClose = {() => this.setState({login_error: null})}>All fields are required</Alert>
+            })
+        } else {
+            this.props.onLogin(email, password)
+        }
     }
 
     render() {
@@ -123,7 +128,7 @@ class LoginPage extends React.Component {
                     <Card bg = "light" text = "dark">
                         <Card.Header className = "card-header"><h2>Create an Account</h2></Card.Header>
                         <Card.Body className = "login-wrapper">
-                            <Form className = "wrapper">
+                            <Form>
                                 <Form.Group>
                                     <h6 className = 'login-h6'>First Name</h6>
                                     <Form.Control onChange = {(e) => 
@@ -157,10 +162,18 @@ class LoginPage extends React.Component {
                                     />
                                     <h5 className = "password-info">{this.state.password_info}</h5>
                                 </Form.Group>
+                                <Form.Group>
+                                    <h6 className = 'login-h6'>Retype Password</h6>
+                                    <Form.Control onChange = {(e) =>
+                                        this.setState({retype_password: e.target.value})}
+                                    className = "create-textbox" placeholder = "Password"
+                                        type = "password" autoComplete = "off"
+                                    />
+                                </Form.Group>
                                 <h5 className = "error-message">{this.state.message}</h5>
                                 <Button onClick = {() =>
                                 this.handleCreate(this.state.firstName, this.state.lastName, this.state.new_email, 
-                                this.state.new_password)}
+                                this.state.new_password, this.state.retype_password)}
                                 className = "done">Done</Button>
                                 <Button onClick = {() => this.setState({create: false})}>Back</Button>
                             </Form>
@@ -178,7 +191,7 @@ class LoginPage extends React.Component {
                     <Card bg = "light" text = "dark">
                         <Card.Header className = "card-header"><h2>Login</h2></Card.Header>
                         <Card.Body className = "login-wrapper">
-                            <Form className = "wrapper">
+                            <Form>
                                 <Form.Group>
                                     <Form.Control onChange = {(e) =>
                                         this.setState({login_email: e.target.value})} 
