@@ -3,7 +3,7 @@
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 
-const generatePDF = questionData => {
+const generatePDF = (questionData, userName) => {
     const doc = new jsPDF();
 
     const tableColumn = ["Question Type", "Question", "Answer", "Selected", "Points"];
@@ -22,7 +22,7 @@ const generatePDF = questionData => {
     });
 
 
-    doc.autoTable(tableColumn, tableRows, { startY: 20 });
+    doc.autoTable(tableColumn, tableRows, { startY: 30 });
     const date = Date().split(" ");
     let dateStr = "";
     for (let i = 0; i <= 3; i++){
@@ -32,7 +32,11 @@ const generatePDF = questionData => {
             dateStr += date[i] + "-"
         }
     }
-    doc.text(`Score: ${score}/5`, 14, 15);
+    
+    doc.setFontSize(22);
+    doc.text(`Quiz Results for ${userName}`, 14, 15)
+    doc.setFontSize(16);
+    doc.text(`Score: ${score}/5`, 14, 25);
     doc.save(`results_${dateStr}.pdf`);
 
 };

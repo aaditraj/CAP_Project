@@ -14,13 +14,14 @@ import TrueFalse from "./components/Questions/TrueFalse/TrueFalse.js"
 import generatePDF from "./components/Report/GeneratePDF.js"
 import LoginPage from "./components/Login/Login"
 import ViewStatistics from "./components/Report/Statistics"
-// import GetData from "./components/DataFetching/GetData";
 
 class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       login_error: false,
+      create_error: false,
+      create_error_message: null,
       take_quiz: false,
       fetched: false,
       submitted: false,
@@ -51,7 +52,6 @@ class App extends React.Component {
   }
   
   componentDidMount(){
-    console.log("Component did mount was called.")
     firebase.auth().onAuthStateChanged(async firebaseUser => {
       if (firebaseUser) {
         var firebaseApp = firebase.apps[0]
@@ -66,15 +66,14 @@ class App extends React.Component {
           this.setState({
             logged_in: true,
             take_quiz: true
-          })
-          
-        }).catch((error) => console.log(error))
+          })})
       } else {
         this.setState({
           logged_in : false,
           written: false,
           take_quiz: false,
-          login_error: false
+          login_error: false,
+          create_error: false
         })
       }
     })
@@ -82,7 +81,6 @@ class App extends React.Component {
 
   }
   componentDidUpdate(prevProps, prevState){
-    console.log("Component did update was called.")
     if (!prevState.take_quiz){
       if (this.state.take_quiz) {
         this.setState({
@@ -100,22 +98,11 @@ class App extends React.Component {
         this.dropdownRef = this.db.collection("DropDown").doc("" + Math.floor((Math.random() * 10)));
         this.trueFalseRef = this.db.collection("TrueFalse").doc( "" + Math.floor((Math.random() * 10)));
         this.fillBlankRef = this.db.collection("FillInTheBlank").doc("" + Math.floor((Math.random() * 10)))
-        // GetData(this.state).then((state, data) => {
-        //   this.setState({
-        //     state
-        //   })
-        //   this.multData = data[0];
-        //   this.multData2 = data[1];
-        //   this.dropdownData = data[2];
-        //   this.trueFalseData = data[3];
-        //   this.fillBlankData = data[4];
-        // })
         this.getQuestionData()
       }
     }
   }
   getQuestionData = async() => {
-    console.log("calling getData.")
     this.setState({
       fetched: false
     })
@@ -154,25 +141,15 @@ class App extends React.Component {
                           fillBlankQuestion: doc.data().Question
                         })
                       }
-                    }).catch(function(error){
-                      console.log("Error getting document:", error)
                     })
                   }
-                }).catch(function(error) {
-                  console.log("Error getting document:", error)
                 })
               }
-            }).catch(function(error) {
-              console.log("Error getting document:", error);
-            });
+            })
           }
-        }).catch(function(error) {
-          console.log("Error getting document:", error)
         })
       }
-    }).catch(function(error) {
-        console.log("Error getting document:", error);
-    }); 
+    })
   }
   handleDropdownSelect = (i, e) => {
     this.setState({
@@ -207,21 +184,26 @@ class App extends React.Component {
 
   handleLogout = () => {
     const auth = firebase.auth();
-    const promise = auth.signOut();
-    promise.catch(e => console.log(e.message))
-    
+    auth.signOut();
   }
   handleCreate = (firstName, lastName, email, password) => {
     const auth = firebase.auth();
     const promise = auth.createUserWithEmailAndPassword(email, password);
-    promise.catch(e => console.log(e.message))
+    promise.catch((e) =>{ 
+      this.setState({create_error: false})
+      this.forceUpdate()
+      this.setState({
+        create_error: true,
+        create_error_message: e.message
+      })})
+      this.forceUpdate()
     firebase.auth().onAuthStateChanged((firebaseUser) => {
       
       if (firebaseUser) {
         this.setState({
           take_quiz : true
         })
-        if (!(this.state.written)){
+        if (!(this.state.written) && !(this.state.create_error)){
           this.writeUserRef = firebase.apps[0].firestore().collection("UserData").doc()
           this.writeUserRef.set({
             Name: firstName + " " + lastName,
@@ -292,7 +274,7 @@ class App extends React.Component {
             dropdownCorrect: (this.state.dropdownState === await this.dropdownData.Answer ? 1: 0),
           }, async () => {
             this.setState({
-              trueFalseCorrect: (Boolean(this.state.trueFalseText.toLowerCase()) === await this.truefalseData.Answer ? 1: 0),
+              trueFalseCorrect: (this.state.trueFalseText.toLowerCase() === await this.truefalseData.Answer.toString() ? 1: 0),
             }, async() => {
               this.setState({
                 fillBlankCorrect: (this.state.fillBlankText.toLowerCase() === await this.fillBlankData.Answer ? 1 : 0),
@@ -301,7 +283,6 @@ class App extends React.Component {
                 this.userData.Scores.push(this.state.multChoiceCorrect1
                   + this.state.multChoiceCorrect2 + this.state.dropdownCorrect + 
                   this.state.trueFalseCorrect + this.state.fillBlankCorrect)
-                console.log(this.userData.Scores)
                 this.writeUserRef.update({
                   Scores: this.userData.Scores,
                   Highest_Score: Math.max(...this.userData.Scores),
@@ -310,10 +291,8 @@ class App extends React.Component {
                 })
                 this.readUserRef = this.db.collection("UserData").where(
                   "Email", "==", firebase.auth().currentUser.email)
-                console.log(this.readUserRef)
                 await this.readUserRef.get().then((querySnapshot) => {
                   querySnapshot.forEach((doc) => {
-                    console.log(doc.data())
                     this.userData = doc.data();
                   })
                   this.setState({
@@ -363,7 +342,9 @@ class App extends React.Component {
     if (this.state.logged_in === false){
       return (
         <LoginPage onLogin = {this.handleLogin} onCreate = {this.handleCreate}
-        error = {this.state.login_error}/>
+        error = {this.state.login_error} create_error = {this.state.create_error}
+          create_error_message = {this.state.create_error_message}
+        />
       )
     } else {
       if (this.state.fetched) {
@@ -498,7 +479,7 @@ class App extends React.Component {
                     selected: this.state.trueFalseText,
                     points: this.state.trueFalseCorrect
                   }
-                ])}>Download Results</Button>
+                ], this.userData.Name)}>Download Results</Button>
                 <ViewStatistics highScore = {this.userData.Highest_Score}
                   lowestScore = {this.userData.Lowest_Score} average = {this.userData.Average}
                 />

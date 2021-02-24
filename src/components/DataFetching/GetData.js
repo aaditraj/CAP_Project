@@ -19,10 +19,10 @@ export default async function GetData(props) {
     let multipleChoice = await multRef.get()
     let multipleChoice2 = await multRef2.get()
     let dropdown = await dropdownRef.get()
-    let trueFalse = trueFalseRef.get()
-    let fillInTheBlank = fillBlankRef.get()
+    let trueFalse = await trueFalseRef.get()
+    let fillInTheBlank = await fillBlankRef.get()
 
-
+    
 
     await multRef.get().then(async (doc) => {
       if (doc.exists) {

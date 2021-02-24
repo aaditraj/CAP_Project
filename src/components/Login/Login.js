@@ -34,7 +34,13 @@ class LoginPage extends React.Component {
                 })
                 this.forceUpdate()
             }
-        }    
+        } if (!(prevProps.create_error)) {
+            if (this.props.create_error){
+                this.setState({
+                    message: this.CreateAlert(this.props.create_error_message)
+                })
+            }
+        }  
     }
     handleCreatePasswordChange = (password) => {
         this.setState({
