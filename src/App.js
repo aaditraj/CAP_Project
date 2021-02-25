@@ -70,7 +70,6 @@ class App extends React.Component {
       } else {
         this.setState({
           logged_in : false,
-          written: false,
           take_quiz: false,
           login_error: false,
           create_error: false
@@ -198,7 +197,6 @@ class App extends React.Component {
       })})
       this.forceUpdate()
     firebase.auth().onAuthStateChanged((firebaseUser) => {
-      
       if (firebaseUser) {
         this.setState({
           take_quiz : true
@@ -251,6 +249,7 @@ class App extends React.Component {
     }
   }
   handleSubmit = async() => {
+    this.score = 0;
     if (this.state.multChoiceState1 === null 
       || this.state.multChoiceState2 === null
       || this.state.dropdownState === null
@@ -280,23 +279,25 @@ class App extends React.Component {
                 fillBlankCorrect: (this.state.fillBlankText.toLowerCase() === await this.fillBlankData.Answer ? 1 : 0),
                 submissionState: <Alert variant="info" >Processing your submission...</Alert>
               }, async () => {
-                this.userData.Scores.push(this.state.multChoiceCorrect1
-                  + this.state.multChoiceCorrect2 + this.state.dropdownCorrect + 
-                  this.state.trueFalseCorrect + this.state.fillBlankCorrect)
+                this.score = this.state.multChoiceCorrect1
+                + this.state.multChoiceCorrect2 + this.state.dropdownCorrect + 
+                this.state.trueFalseCorrect + this.state.fillBlankCorrect
+                this.userData.Scores.push(this.score)
                 this.writeUserRef.update({
                   Scores: this.userData.Scores,
                   Highest_Score: Math.max(...this.userData.Scores),
                   Lowest_Score: Math.min(...this.userData.Scores),
                   Average:  (this.userData.Scores.reduce((a, b) => a + b, 0))/(this.userData.Scores.length)
-                })
-                this.readUserRef = this.db.collection("UserData").where(
-                  "Email", "==", firebase.auth().currentUser.email)
-                await this.readUserRef.get().then((querySnapshot) => {
-                  querySnapshot.forEach((doc) => {
-                    this.userData = doc.data();
-                  })
-                  this.setState({
-                    submitted: true
+                }).then(async () => {
+                  this.readUserRef = this.db.collection("UserData").where(
+                    "Email", "==", firebase.auth().currentUser.email)
+                  await this.readUserRef.get().then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                      this.userData = doc.data();
+                    })
+                    this.setState({
+                      submitted: true
+                    })
                   })
                 })
               }) 
@@ -402,7 +403,7 @@ class App extends React.Component {
               <header>
                 <Jumbotron className = "jumbo">
                   <h1>FBLA Expert</h1>
-                  <h4>Results</h4>
+                  <h4>Score: {this.score}/5</h4>
                 </Jumbotron>
                 <Button variant = "outline-primary" onClick = {this.handleLogout}>Logout</Button>
               </header>

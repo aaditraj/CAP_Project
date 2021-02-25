@@ -61,7 +61,6 @@
     "electron": "^11.2.3"
   },
   "build": {
-    "appId": "com.fbla_expert",
-    "buildResources": "assets/logo"
+    "appId": "com.fbla_expert"
   }
 }
