@@ -144,6 +144,7 @@ class App extends React.Component {
   handleLogout = () => {
     const auth = firebase.auth();
     auth.signOut();
+    window.location.reload(true)
   }
 
   //creating new account & writing new user info into database
