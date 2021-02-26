@@ -15,7 +15,7 @@ class ViewStatistics extends React.Component {
     render(){
         return (
             <>
-              <Button variant="primary" onClick={() => {this.setState({show: true})}}>
+              <Button variant="info" onClick={() => {this.setState({show: true})}}>
                 View Statistics
               </Button>
         

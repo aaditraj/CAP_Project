@@ -424,7 +424,7 @@ class App extends React.Component {
               {/*Three submission options, clicking download report button
               creates a pdf with the current quiz results, which are passed as a paramater*/}
                 <div className = "retake">
-                <Button variant = "secondary" onClick = {this.handleNewTake}>Take Another Quiz</Button>
+                <Button onClick = {this.handleNewTake}>Take Another Quiz</Button>
                 </div>
                 <div className = "export">
                 <Button variant = "warning" onClick = {() => generatePDF([
