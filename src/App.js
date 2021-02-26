@@ -1,18 +1,28 @@
+//firebase is the database we are using
 import React from "react";
-import Button from "react-bootstrap/Button"
 import './App.css';
 import firebase from "firebase/app";
 import "firebase/auth";
 import 'firebase/firestore';
+
+//Login page and function for getting the question data from the database
+import LoginPage from "./components/Login/Login"
+import GetData from "./components/DataFetching/GetData"
+
+//styling components from React Bootstrap
 import Jumbotron from "react-bootstrap/Jumbotron";
 import Spinner from "react-bootstrap/Spinner"
 import Alert from "react-bootstrap/Alert";
+import Button from "react-bootstrap/Button";
+
+//Question components (e.g. radio buttons, textboxes) for the questions
 import DropdownQuestion from "./components/Questions/Dropdown/Dropdown.js"
 import FillInBlank from "./components/Questions/FillTheBlank/FillTheBlank.js";
 import MultChoice from "./components/Questions/MultChoice/MultChoice.js";
 import TrueFalse from "./components/Questions/TrueFalse/TrueFalse.js"
+
+//features for the results page: generating report, and viewing statistics
 import generatePDF from "./components/Report/GeneratePDF.js"
-import LoginPage from "./components/Login/Login"
 import ViewStatistics from "./components/Report/Statistics"
 
 class App extends React.Component {
@@ -71,85 +81,28 @@ class App extends React.Component {
         this.setState({
           logged_in : false,
           take_quiz: false,
+          written: false,
           login_error: false,
-          create_error: false
+          create_error: false,
+          fetched: false,
+          submitted: false,
+          submissionState: null
         })
       }
     })
-
-
   }
-  componentDidUpdate(prevProps, prevState){
+  async componentDidUpdate(prevProps, prevState){
     if (!prevState.take_quiz){
       if (this.state.take_quiz) {
         this.setState({
           logged_in : true
         })
-        var firebaseApp = firebase.apps[0]
-        this.db = firebaseApp.firestore()
-        var multChosen = Math.floor(Math.random() * 20);
-        this.multRef = this.db.collection("MultipleChoice").doc("" + multChosen);
-        var multChosen2 = Math.floor(Math.random() * 20);
-        while (multChosen2 === multChosen){
-          multChosen2 = Math.floor(Math.random() * 20)
-        }
-        this.multRef2 = this.db.collection("MultipleChoice").doc("" + multChosen2);
-        this.dropdownRef = this.db.collection("DropDown").doc("" + Math.floor((Math.random() * 10)));
-        this.trueFalseRef = this.db.collection("TrueFalse").doc( "" + Math.floor((Math.random() * 10)));
-        this.fillBlankRef = this.db.collection("FillInTheBlank").doc("" + Math.floor((Math.random() * 10)))
-        this.getQuestionData()
+        this.db = firebase.apps[0].firestore()
+        this.handleNewTake()
       }
     }
   }
-  getQuestionData = async() => {
-    this.setState({
-      fetched: false
-    })
-    await this.multRef.get().then(async (doc) => {
-      if (doc.exists) {
-        this.multData = doc.data()
-        this.setState({
-          multChoices1: doc.data().Choices,
-          multQuestion1: doc.data().Question,
-        }) 
-        await this.multRef2.get().then(async (doc) => {
-          if (doc.exists) {
-            this.multData2 = doc.data()
-            this.setState({
-              multChoices2: doc.data().Choices,
-              multQuestion2: doc.data().Question,
-            })
-            await this.dropdownRef.get().then(async (doc) => {
-              if (doc.exists) {
-                this.dropdownData = doc.data()
-                this.setState({
-                  dropdownChoices: doc.data().Choices,
-                  dropdownQuestion: doc.data().Question,
-                })
-                await this.trueFalseRef.get().then(async (doc) => {
-                  if (doc.exists) {
-                    this.truefalseData = doc.data()
-                    this.setState({
-                      trueFalseQuestion: doc.data().Question
-                    })
-                    await this.fillBlankRef.get().then(async (doc) => {
-                      if (doc.exists) {
-                        this.fillBlankData = doc.data()
-                        this.setState({
-                          fetched: true,
-                          fillBlankQuestion: doc.data().Question
-                        })
-                      }
-                    })
-                  }
-                })
-              }
-            })
-          }
-        })
-      }
-    })
-  }
+ 
   handleDropdownSelect = (i, e) => {
     this.setState({
       dropdownText: e,
@@ -210,11 +163,8 @@ class App extends React.Component {
             Highest_Score: null,
             Lowest_Score: null,
             Average: null
-          })
+          }).then(this.setState({written: true}))
         }
-        this.setState({
-          written: true
-        })
       }
     })
     
@@ -287,7 +237,7 @@ class App extends React.Component {
                   Scores: this.userData.Scores,
                   Highest_Score: Math.max(...this.userData.Scores),
                   Lowest_Score: Math.min(...this.userData.Scores),
-                  Average:  (this.userData.Scores.reduce((a, b) => a + b, 0))/(this.userData.Scores.length)
+                  Average:  ((this.userData.Scores.reduce((a, b) => a + b, 0))/(this.userData.Scores.length)).toFixed(2)
                 }).then(async () => {
                   this.readUserRef = this.db.collection("UserData").where(
                     "Email", "==", firebase.auth().currentUser.email)
@@ -308,16 +258,26 @@ class App extends React.Component {
     }
     
 }
-  handleNewTake = () => {
-    this.multRef = this.db.collection("MultipleChoice").doc("" + Math.floor((Math.random() * 10)));
-    this.multRef2 = this.db.collection("MultipleChoice").doc("" + Math.floor((Math.random() * 10)));
-    while (this.multRef === this.multRef2){
-      this.multRef2 = this.db.collection("MultipleChoice").doc("" + Math.floor((Math.random() * 10)));
-    }
-    this.dropdownRef = this.db.collection("DropDown").doc("" + Math.floor((Math.random() * 10)))
-    this.trueFalseRef = this.db.collection("TrueFalse").doc("" + Math.floor((Math.random() * 10)))
-    this.fillBlankRef = this.db.collection("FillInTheBlank").doc("" + Math.floor(Math.random() * 10))
-    this.getQuestionData()
+  handleNewTake = async () => {
+    var data = await GetData(this.state)
+    var state = data[0];
+    var questionData = data[1]
+    this.setState({
+      multChoices1: state.multChoices1,
+      multQuestion1: state.multQuestion1,
+      multChoices2: state.multChoices2,
+      multQuestion2: state.multQuestion2,
+      dropdownChoices: state.dropdownChoices,
+      dropdownQuestion: state.dropdownQuestion,
+      trueFalseQuestion: state.trueFalseQuestion,
+      fillBlankQuestion: state.fillBlankQuestion,
+      fetched: state.fetched
+    })
+    this.multData = questionData.get('multipleChoice');
+    this.multData2 = questionData.get('multipleChoice2');
+    this.dropdownData = questionData.get('dropdown');
+    this.truefalseData = questionData.get('trueFalse');
+    this.fillBlankData = questionData.get('fillInTheBlank');
     if (this.state.fetched === true){
       this.setState({
         multChoiceState1: null,
@@ -500,7 +460,4 @@ class App extends React.Component {
     }
   }
 }
-
-
-
 export default App;
