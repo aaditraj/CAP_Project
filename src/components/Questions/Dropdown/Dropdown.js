@@ -8,6 +8,7 @@ import xmark from "../../../assets/x.svg";
 import checkmark from "../../../assets/check.svg"; 
 import InputGroup from "react-bootstrap/InputGroup"
 
+//Displays dropdown question for quiz page and textbox results display
 class DropdownQuestion extends React.Component {  
     render() {
         let components = [];

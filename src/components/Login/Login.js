@@ -1,9 +1,13 @@
 import React from "react"
+
+//React Bootstrap components
 import Form from "react-bootstrap/Form"
 import Button from "react-bootstrap/Button"
 import Card from "react-bootstrap/Card"
 import Alert from "react-bootstrap/Alert"
 import Jumbotron from "react-bootstrap/Jumbotron"
+
+//Styling for login and account creation page
 import "./Login.css"
 
 class LoginPage extends React.Component {
@@ -25,6 +29,9 @@ class LoginPage extends React.Component {
             lastName: null
         }
     }
+
+    //detecting if there is login error or
+    //account creation error from props passed in App file
     componentDidUpdate(prevProps){  
         if (!(prevProps.error)) {
             if (this.props.error){
@@ -42,12 +49,15 @@ class LoginPage extends React.Component {
             }
         }  
     }
+
     handleCreatePasswordChange = (password) => {
         this.setState({
             new_password: password,
         })
     }
     
+    //creates a popup displaying password rules when clicking 
+    //'Password Rules' link
     popPasswordRules = () => {
         this.setState({
             password_info:  <Alert dismissible 
@@ -61,15 +71,20 @@ class LoginPage extends React.Component {
             </Alert>
         })
     }
+
     isFieldEmpty = (field) => {
         return (field === null || field.replace(/\s/g, '').length === 0)
     }
+
     CreateAlert = (message) => {
         return <Alert variant="danger" dismissible 
         onClose = {() => this.setState({
             message: null
         })}>{message}</Alert>
     }
+
+    //checks if fields are empty, password mismatch,
+    //password rules violation, and invalid email using regex
     handleCreate = (firstName, lastName, email, password, retype) => {
         if (this.isFieldEmpty(firstName) || this.isFieldEmpty(lastName) || this.isFieldEmpty(email) 
             || this.isFieldEmpty(password)){
@@ -112,6 +127,8 @@ class LoginPage extends React.Component {
             this.props.onCreate(firstName, lastName, email, password)
         }
     }
+
+    //if no error, calls the login function from App file
     handleLogin = (email, password) => {
         if (this.isFieldEmpty(email) || this.isFieldEmpty(password)){
             this.setState({
@@ -123,6 +140,7 @@ class LoginPage extends React.Component {
         }
     }
 
+    //render for two cases: user creates account and user is logging in
     render() {
         if (this.state.create){
             return (
@@ -225,11 +243,7 @@ class LoginPage extends React.Component {
                 </div>
             )
         }
-       
     }
-    
-    
-    
 }
 
 export default LoginPage;

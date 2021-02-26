@@ -5,6 +5,7 @@ import xmark from "../../../assets/x.svg";
 import checkmark from "../../../assets/check.svg"; 
 import InputGroup from "react-bootstrap/InputGroup"
 
+//Displays fill-in-the-blank textbox for quiz page and results page
 const FillInBlank  = (props) => {
     let components  = [];
     if (props.disabled === 'false'){
@@ -12,9 +13,7 @@ const FillInBlank  = (props) => {
             <Form.Group className = "formgroup" controlId = "formBasicInput" key = "fill-blank-question">
                 <Form.Control  onChange = {props.onChange} className = 'textbox' placeholder = "Type your answer here..."/> 
             </Form.Group>
-        )
-        
-        
+        )  
     } else{
         if (props.correct === 1){
             components.push (

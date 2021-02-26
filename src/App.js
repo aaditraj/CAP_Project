@@ -1,4 +1,4 @@
-//firebase is the database we are using
+//we are using firebase cloud firestore database
 import React from "react";
 import './App.css';
 import firebase from "firebase/app";
@@ -25,10 +25,11 @@ import TrueFalse from "./components/Questions/TrueFalse/TrueFalse.js"
 import generatePDF from "./components/Report/GeneratePDF.js"
 import ViewStatistics from "./components/Report/Statistics"
 
+//main class that is being loaded into the HTML
 class App extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {
+    this.state = { 
       login_error: false,
       create_error: false,
       create_error_message: null,
@@ -61,6 +62,8 @@ class App extends React.Component {
 
   }
   
+  //gets called when the quiz page loads to get the user's information (e.g. name)
+  //also handles logout
   componentDidMount(){
     firebase.auth().onAuthStateChanged(async firebaseUser => {
       if (firebaseUser) {
@@ -91,6 +94,8 @@ class App extends React.Component {
       }
     })
   }
+  
+  //called when logging in or creating new account; calls function to get question data 
   async componentDidUpdate(prevProps, prevState){
     if (!prevState.take_quiz){
       if (this.state.take_quiz) {
@@ -116,6 +121,8 @@ class App extends React.Component {
     })
   }
  
+  //below three functions use firebase auth for login
+  //authenticating existing account 
   handleLogin = (email, password) => {
     const auth = firebase.auth();
     const promise = auth.signInWithEmailAndPassword(email, password);
@@ -138,6 +145,8 @@ class App extends React.Component {
     const auth = firebase.auth();
     auth.signOut();
   }
+
+  //creating new account & writing new user info into database
   handleCreate = (firstName, lastName, email, password) => {
     const auth = firebase.auth();
     const promise = auth.createUserWithEmailAndPassword(email, password);
@@ -166,10 +175,11 @@ class App extends React.Component {
           }).then(this.setState({written: true}))
         }
       }
-    })
-    
+    }) 
   }
 
+  //checking for invalid data entry in fill-in-the-blank textbox
+  //if no error, captures user's entry
   handleFillBlank = (e) => {
     if (!(e.target.value.match(/^[A-Za-z]+$/)) && 
     (e.target.value !== '')){
@@ -198,6 +208,10 @@ class App extends React.Component {
       })
     }
   }
+
+  //checks that all questions are answered with no errors
+  //if no error, compares user's answer with database and writes 
+  //score and new statistics to the database
   handleSubmit = async() => {
     this.score = 0;
     if (this.state.multChoiceState1 === null 
@@ -256,8 +270,9 @@ class App extends React.Component {
         })
       })
     }
-    
-}
+  }
+
+  //resets question information when user takes new quiz
   handleNewTake = async () => {
     var data = await GetData(this.state)
     var state = data[0];
@@ -302,6 +317,7 @@ class App extends React.Component {
   render = () => {
     if (this.state.logged_in === false){
       return (
+        //rending Login component from another file, uses passed props to reference
         <LoginPage onLogin = {this.handleLogin} onCreate = {this.handleCreate}
         error = {this.state.login_error} create_error = {this.state.create_error}
           create_error_message = {this.state.create_error_message}
@@ -309,6 +325,8 @@ class App extends React.Component {
       )
     } else {
       if (this.state.fetched) {
+        //if question data fetched & user has not submitted, render a welcome message
+        //and a div for each question. Question components do not include the actual question
         if (this.state.submitted === false){
           return (
             <div className="App">
@@ -357,7 +375,9 @@ class App extends React.Component {
                 onClick = {this.handleSubmit}><strong>Submit</strong></Button>
               </div>
             </div>
-        )} else {
+        )} else { 
+          // if the user has clicked 'submit', displays the results page
+          // with read-only/disabled questions showing the results
           return (
             <div className = "App submission">
               <header>
@@ -400,6 +420,8 @@ class App extends React.Component {
               </div>
               <br></br>
               <div className = "submission-options">
+              {/*Three submission options, clicking download report button
+              creates a pdf with the current quiz results, which are passed as a paramater*/}
                 <div className = "retake">
                 <Button variant = "secondary" onClick = {this.handleNewTake}>Take Another Quiz</Button>
                 </div>
@@ -441,6 +463,7 @@ class App extends React.Component {
                     points: this.state.trueFalseCorrect
                   }
                 ], this.userData.Name)}>Download Results</Button>
+                {/*Displays user's quiz score statistics in a popup*/}
                 <ViewStatistics highScore = {this.userData.Highest_Score}
                   lowestScore = {this.userData.Lowest_Score} average = {this.userData.Average}
                 />

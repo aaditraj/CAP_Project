@@ -5,6 +5,9 @@ import ButtonGroup from "react-bootstrap/ButtonGroup"
 import "./TrueFalse.css"
 import checkmark from "../../../assets/check.svg"
 import xmark from "../../../assets/x.svg"
+
+//Displays true-false dropdown for quiz page and a results display
+
 class TrueFalse extends React.Component {
     render() {
         if (this.props.disabled === 'false'){

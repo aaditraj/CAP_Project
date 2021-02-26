@@ -2,8 +2,8 @@ import React from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 
-
-
+//displays statistics from App file when user clicks 'View Statistics'
+//Statistics include average, highest, and lowest scores across all user's attempts
 class ViewStatistics extends React.Component {
     constructor(props){
         super(props);
