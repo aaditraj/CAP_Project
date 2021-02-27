@@ -44,8 +44,10 @@ class LoginPage extends React.Component {
         } if (!(prevProps.create_error)) {
             if (this.props.create_error){
                 this.setState({
-                    message: this.CreateAlert(this.props.create_error_message)
+                    message: this.CreateAlert(this.props.create_error_message 
+                        + " Redirecting to login page...")
                 })
+                setTimeout(() => {window.location.reload()}, 3000)
             }
         }  
     }

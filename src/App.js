@@ -162,7 +162,8 @@ class App extends React.Component {
     firebase.auth().onAuthStateChanged((firebaseUser) => {
       if (firebaseUser) {
         this.setState({
-          take_quiz : true
+          take_quiz : true,
+          create_error: false
         })
         if (!(this.state.written) && !(this.state.create_error)){
           this.writeUserRef = firebase.apps[0].firestore().collection("UserData").doc()
