@@ -7,7 +7,7 @@ import checkmark from "../../../assets/check.svg";
 //Displays radio buttons for multiple choice questions for quiz page and results page
 const MultChoice = (props) => {
     let components = []
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < props.answerChoices.length; i++) {
         if (props.disabled === 'true'){
             if (i === props.selected) {
                 if (props.selected === props.answer){

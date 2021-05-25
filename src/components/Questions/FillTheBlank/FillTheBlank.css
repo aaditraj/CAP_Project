@@ -1,11 +1,13 @@
 
 
  .textbox {
-    width: 50vh;
+    width: 300px;
     margin-top: 10px;
 } 
 
+
+
 .input-group-display{
-    width: 50vh;
+    width: 300px;
     margin: 10px 0px;
 }

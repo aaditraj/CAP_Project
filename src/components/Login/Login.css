@@ -8,13 +8,18 @@
     text-align: center;
 }
 
-.login-textbox{
-    width: 40vh;
+.login-textbox, .create-textbox{
+    width: 40vw;
 }
 
-.create-textbox{
-    width: 50vh;
+
+
+@media only screen and (min-width: 1100px) {
+    .login-textbox, .create-textbox {
+      width: 25vw;
+    }
 }
+
 
 
 .password-info {

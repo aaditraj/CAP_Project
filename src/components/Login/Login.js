@@ -152,7 +152,7 @@ class LoginPage extends React.Component {
                         <h4>Test Your Knowledge About FBLA!</h4>
                     </Jumbotron>
                     <Card bg = "light" text = "dark">
-                        <Card.Header className = "card-header"><h2>Create an Account</h2></Card.Header>
+                        <Card.Header className = "card-header"><h2>Create Account</h2></Card.Header>
                         <Card.Body className = "login-wrapper">
                             <Form>
                                 <Form.Group>

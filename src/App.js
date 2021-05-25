@@ -14,6 +14,8 @@ import Jumbotron from "react-bootstrap/Jumbotron";
 import Spinner from "react-bootstrap/Spinner"
 import Alert from "react-bootstrap/Alert";
 import Button from "react-bootstrap/Button";
+import Dropdown from "react-bootstrap/Dropdown";
+
 
 //Question components (e.g. radio buttons, textboxes) for the questions
 import DropdownQuestion from "./components/Questions/Dropdown/Dropdown.js"
@@ -33,7 +35,6 @@ class App extends React.Component {
       login_error: false,
       create_error: false,
       create_error_message: null,
-      take_quiz: false,
       fetched: false,
       submitted: false,
       multChoices1: null,
@@ -78,12 +79,12 @@ class App extends React.Component {
           })
           this.setState({
             logged_in: true,
-            take_quiz: true
-          })})
+          })
+          this.handleNewTake()
+        })
       } else {
         this.setState({
           logged_in : false,
-          take_quiz: false,
           written: false,
           login_error: false,
           create_error: false,
@@ -95,18 +96,15 @@ class App extends React.Component {
     })
   }
   
-  //called when logging in or creating new account; calls function to get question data 
-  async componentDidUpdate(prevProps, prevState){
-    if (!prevState.take_quiz){
-      if (this.state.take_quiz) {
-        this.setState({
-          logged_in : true
-        })
-        this.db = firebase.apps[0].firestore()
-        this.handleNewTake()
-      }
-    }
-  }
+  // //called when logging in or creating new account; calls function to get question data 
+  // async componentDidUpdate(prevProps, prevState){
+  //   if (!prevState.logged_in){
+  //     if (this.state.logged_in) {
+  //       this.db = firebase.apps[0].firestore()
+  //       this.handleNewTake()
+  //     }
+  //   }
+  // }
  
   handleDropdownSelect = (i, e) => {
     this.setState({
@@ -135,7 +133,7 @@ class App extends React.Component {
     firebase.auth().onAuthStateChanged((firebaseUser) => {
       if (firebaseUser){
         this.setState({
-          take_quiz: true
+          logged_in: true,
         })
       }
     })
@@ -162,7 +160,7 @@ class App extends React.Component {
     firebase.auth().onAuthStateChanged((firebaseUser) => {
       if (firebaseUser) {
         this.setState({
-          take_quiz : true,
+          logged_in : true,
           create_error: false
         })
         if (!(this.state.written) && !(this.state.create_error)){
@@ -211,9 +209,12 @@ class App extends React.Component {
     }
   }
 
-  //checks that all questions are answered with no errors
-  //if no error, compares user's answer with database and writes 
-  //score and new statistics to the database
+  //checks that all questions 
+  //are answered with no errors 
+  //if no error, compares user's 
+  //answer with database and writes 
+  //score and new statistics
+  // to the database
   handleSubmit = async() => {
     this.score = 0;
     if (this.state.multChoiceState1 === null 
@@ -271,6 +272,57 @@ class App extends React.Component {
           })
         })
       })
+      // this.resultsPDF = generatePDF([
+      //   {
+      //     type: "Dropdown",
+      //     question: this.state.dropdownQuestion,
+      //     answer: this.state.dropdownChoices[this.dropdownData.Answer],
+      //     selected: this.state.dropdownChoices[this.state.dropdownState],
+      //     points: this.state.dropdownCorrect
+      //   },
+      //   {
+      //     type: "Fill In The Blank",
+      //     question: this.state.fillBlankQuestion,
+      //     answer: this.fillBlankData.Answer,
+      //     selected: this.state.fillBlankText,
+      //     points: this.state.fillBlankCorrect
+      //   },
+      //   {
+      //     type: "Multiple Choice",
+      //     question: this.state.multQuestion1,
+      //     answer: this.state.multChoices1[this.multData.Answer],
+      //     selected: this.state.multChoices1[this.state.multChoiceState1],
+      //     points: this.state.multChoiceCorrect1
+      //   },
+      //   {
+      //     type: "Multiple Choice",
+      //     question: this.state.multQuestion2,
+      //     answer: this.state.multChoices2[this.multData2.Answer],
+      //     selected: this.state.multChoices2[this.state.multChoiceState2],
+      //     points: this.state.multChoiceCorrect2
+      //   },
+      //   {
+      //     type: "True or False",
+      //     question: this.state.trueFalseQuestion,
+      //     answer: this.truefalseData.Answer ? "True" : "False",
+      //     selected: this.state.trueFalseText,
+      //     points: this.state.trueFalseCorrect
+      //   }
+      // ], this.userData.Name, false)
+      var resultsPDF = this.createPDF(false)
+      const date = Date().split(" ");
+      let dateStr = "";
+      for (let i = 0; i <= 4; i++){
+          if (i === 4){
+              dateStr += date[i]
+          }else{
+              dateStr += date[i] + "-"
+          }
+      }
+      var resultsStorageRef = firebase.storage().ref().child(`Results/${this.userData.Name}/results_${dateStr}.pdf`)
+      resultsStorageRef.put(resultsPDF).then((snapshot) => {
+        console.log('Uploaded a blob or file!');
+      });
     }
   }
 
@@ -316,8 +368,50 @@ class App extends React.Component {
     }
   }
 
+  createPDF = (showDialog) => {
+    console.log("I am creating a PDF! With " + showDialog + "dialog")
+    generatePDF([
+        {
+          type: "Dropdown",
+          question: this.state.dropdownQuestion,
+          answer: this.state.dropdownChoices[this.dropdownData.Answer],
+          selected: this.state.dropdownChoices[this.state.dropdownState],
+          points: this.state.dropdownCorrect
+        },
+        {
+          type: "Fill In The Blank",
+          question: this.state.fillBlankQuestion,
+          answer: this.fillBlankData.Answer,
+          selected: this.state.fillBlankText,
+          points: this.state.fillBlankCorrect
+        },
+        {
+          type: "Multiple Choice",
+          question: this.state.multQuestion1,
+          answer: this.state.multChoices1[this.multData.Answer],
+          selected: this.state.multChoices1[this.state.multChoiceState1],
+          points: this.state.multChoiceCorrect1
+        },
+        {
+          type: "Multiple Choice",
+          question: this.state.multQuestion2,
+          answer: this.state.multChoices2[this.multData2.Answer],
+          selected: this.state.multChoices2[this.state.multChoiceState2],
+          points: this.state.multChoiceCorrect2
+        },
+        {
+          type: "True or False",
+          question: this.state.trueFalseQuestion,
+          answer: this.truefalseData.Answer ? "True" : "False",
+          selected: this.state.trueFalseText,
+          points: this.state.trueFalseCorrect
+        }
+      ], this.userData.Name, showDialog)
+  }
+  
+
   render = () => {
-    if (this.state.logged_in === false){
+    if (!this.state.logged_in){
       return (
         //rending Login component from another file, uses passed props to reference
         <LoginPage onLogin = {this.handleLogin} onCreate = {this.handleCreate}
@@ -327,6 +421,7 @@ class App extends React.Component {
       )
     } else {
       if (this.state.fetched) {
+        
         //if question data fetched & user has not submitted, render a welcome message
         //and a div for each question. Question components do not include the actual question
         if (this.state.submitted === false){
@@ -337,7 +432,24 @@ class App extends React.Component {
                   <h1>Welcome, {this.userData.Name.split(" ")[0]}</h1>
                   <h4>Are you an FBLA Expert?</h4>
                 </Jumbotron>
-                <Button variant = "outline-primary" onClick = {this.handleLogout}>Logout</Button>
+                <Dropdown>
+                    <Dropdown.Toggle variant="outline-primary">
+                      {this.userData.Name}
+                    </Dropdown.Toggle>
+    
+                    <Dropdown.Menu>
+                      <Dropdown.Item eventKey={'logout'}
+                      onSelect = {this.handleLogout}
+                      key = {'logout'}>Logout
+                      </Dropdown.Item>
+                      <ViewStatistics
+                        menuItem = "true" highScore = {this.userData.Highest_Score}
+                        lowestScore = {this.userData.Lowest_Score} average = {this.userData.Average}
+                        attempts = {this.userData.Scores.length}
+                      />
+                    </Dropdown.Menu>
+                </Dropdown>
+                {/* <Button variant = "outline-primary" onClick = {this.handleLogout}>Logout</Button> */}
               </header>
               <div className = "question dropdown">
                 <h5>1. {this.state.dropdownQuestion}</h5>
@@ -387,7 +499,23 @@ class App extends React.Component {
                   <h1>FBLA Expert</h1>
                   <h4>Score: {this.score}/5</h4>
                 </Jumbotron>
-                <Button variant = "outline-primary" onClick = {this.handleLogout}>Logout</Button>
+                <Dropdown>
+                    <Dropdown.Toggle variant="outline-primary">
+                      {this.userData.Name}
+                    </Dropdown.Toggle>
+    
+                    <Dropdown.Menu>
+                      <Dropdown.Item eventKey={'logout'}
+                      onSelect = {this.handleLogout}
+                      key = {'logout'}>Logout
+                      </Dropdown.Item>
+                      <ViewStatistics
+                        menuItem = "true" highScore = {this.userData.Highest_Score}
+                        lowestScore = {this.userData.Lowest_Score} average = {this.userData.Average}
+                        attempts = {this.userData.Scores.length}
+                      />
+                    </Dropdown.Menu>
+                </Dropdown>
               </header>
               <div className = 'question dropdown'>
                   <h5><strong>{this.state.dropdownCorrect === 1 ? "Correct Answer" : "Incorrect Answer"}</strong></h5>
@@ -418,7 +546,9 @@ class App extends React.Component {
               <div className = 'question trueFalse'>
                 <h5><strong>{this.state.trueFalseCorrect === 1 ? "Correct Answer" : "Incorrect Answer"}</strong></h5>
                 <h6>5. {this.state.trueFalseQuestion}</h6>
-                <TrueFalse disabled = 'true' answer = {this.truefalseData.Answer}/>
+                {/* <TrueFalse disabled = 'true' answer = {this.truefalseData.Answer}/> */}
+                <MultChoice answerChoices = {['True', 'False']} disabled = 'true' selected = {['True, False'].indexOf(this.trueFalseText)}
+                answer = {this.truefalseData.Answer ? 0 : 1}></MultChoice>
               </div>
               <br></br>
               <div className = "submission-options">
@@ -428,47 +558,55 @@ class App extends React.Component {
                 <Button onClick = {this.handleNewTake}>Take Another Quiz</Button>
                 </div>
                 <div className = "export">
-                <Button variant = "warning" onClick = {() => generatePDF([
-                  {
-                    type: "Dropdown",
-                    question: this.state.dropdownQuestion,
-                    answer: this.state.dropdownChoices[this.dropdownData.Answer],
-                    selected: this.state.dropdownChoices[this.state.dropdownState],
-                    points: this.state.dropdownCorrect
-                  },
-                  {
-                    type: "Fill In The Blank",
-                    question: this.state.fillBlankQuestion,
-                    answer: this.fillBlankData.Answer,
-                    selected: this.state.fillBlankText,
-                    points: this.state.fillBlankCorrect
-                  },
-                  {
-                    type: "Multiple Choice",
-                    question: this.state.multQuestion1,
-                    answer: this.state.multChoices1[this.multData.Answer],
-                    selected: this.state.multChoices1[this.state.multChoiceState1],
-                    points: this.state.multChoiceCorrect1
-                  },
-                  {
-                    type: "Multiple Choice",
-                    question: this.state.multQuestion2,
-                    answer: this.state.multChoices2[this.multData2.Answer],
-                    selected: this.state.multChoices2[this.state.multChoiceState2],
-                    points: this.state.multChoiceCorrect2
-                  },
-                  {
-                    type: "True or False",
-                    question: this.state.trueFalseQuestion,
-                    answer: this.truefalseData.Answer ? "True" : "False",
-                    selected: this.state.trueFalseText,
-                    points: this.state.trueFalseCorrect
-                  }
-                ], this.userData.Name)}>Download Results</Button>
+                <Button variant = "warning" onClick = {() => this.createPDF(true)}
+                // generatePDF([
+                //   {
+                //     type: "Dropdown",
+                //     question: this.state.dropdownQuestion,
+                //     answer: this.state.dropdownChoices[this.dropdownData.Answer],
+                //     selected: this.state.dropdownChoices[this.state.dropdownState],
+                //     points: this.state.dropdownCorrect
+                //   },
+                //   {
+                //     type: "Fill In The Blank",
+                //     question: this.state.fillBlankQuestion,
+                //     answer: this.fillBlankData.Answer,
+                //     selected: this.state.fillBlankText,
+                //     points: this.state.fillBlankCorrect
+                //   },
+                //   {
+                //     type: "Multiple Choice",
+                //     question: this.state.multQuestion1,
+                //     answer: this.state.multChoices1[this.multData.Answer],
+                //     selected: this.state.multChoices1[this.state.multChoiceState1],
+                //     points: this.state.multChoiceCorrect1
+                //   },
+                //   {
+                //     type: "Multiple Choice",
+                //     question: this.state.multQuestion2,
+                //     answer: this.state.multChoices2[this.multData2.Answer],
+                //     selected: this.state.multChoices2[this.state.multChoiceState2],
+                //     points: this.state.multChoiceCorrect2
+                //   },
+                //   {
+                //     type: "True or False",
+                //     question: this.state.trueFalseQuestion,
+                //     answer: this.truefalseData.Answer ? "True" : "False",
+                //     selected: this.state.trueFalseText,
+                //     points: this.state.trueFalseCorrect
+                //   }
+                // ], this.userData.Name)}
+                >Download Results</Button>
                 {/*Displays user's quiz score statistics in a popup*/}
-                <ViewStatistics highScore = {this.userData.Highest_Score}
+                <ViewStatistics menuItem = "false" highScore = {this.userData.Highest_Score}
                   lowestScore = {this.userData.Lowest_Score} average = {this.userData.Average}
-                />
+                 attempts = {this.userData.Scores.length}/>
+                {/* <Button variant="info" onClick={<ViewStatistics
+                  highScore = {this.userData.Highest_Score}
+                  lowestScore = {this.userData.Lowest_Score} average = {this.userData.Average}
+                />}>
+                View Statistics
+                </Button> */}
                 </div>
               </div>     
             </div>

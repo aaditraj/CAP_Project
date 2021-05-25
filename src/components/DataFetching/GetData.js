@@ -24,7 +24,7 @@ export default async function GetData(props) {
 
     //For each question, return the data of the question document for checking against
     //user's submitted answers later, and return the question and choices for display.
-    if (multipleChoice.exists){
+    if (multipleChoice.exists){ 
       questionData.set('multipleChoice', multipleChoice.data());
       state.multChoices1 = multipleChoice.data().Choices
       state.multQuestion1 = multipleChoice.data().Question
