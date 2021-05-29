@@ -70,7 +70,7 @@ const MultChoice = (props) => {
                     />
                 )
             }
-            else {
+            else if (props.question === '2') {
                 components.push(
                     <Form.Check 
                     type="radio"
@@ -78,6 +78,17 @@ const MultChoice = (props) => {
                     label={props.answerChoices[i]}
                     name="formHorizontalRadios"
                     onChange = {(e) => props.onSelect(i, 2, e)}
+                    />
+                )
+            }
+            else {
+                components.push(
+                    <Form.Check 
+                    type="radio"
+                    key={`formHorizontalRadios` + (i+1)}
+                    label={props.answerChoices[i]}
+                    name="formHorizontalRadios"
+                    onChange = {(e) => props.onSelect(i, 3, e)}
                     />
                 )
             }

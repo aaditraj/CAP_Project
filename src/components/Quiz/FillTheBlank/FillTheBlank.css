@@ -1,0 +1,25 @@
+
+
+ .textbox {
+    width: 300px;
+    margin-top: 10px;
+} 
+
+
+
+.input-group-display{
+    width: 300px;
+    margin: 10px 0px;
+}
+
+
+
+
+@media only screen and (max-width: 400px) {
+    .textbox {
+      width: 75vw;
+    }
+    .input-group-display{
+        width: 75vw;
+    }
+  }

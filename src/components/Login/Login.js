@@ -146,18 +146,20 @@ class LoginPage extends React.Component {
     render() {
         if (this.state.create){
             return (
-                <div>
+                <div className = "home-screen">
                     <Jumbotron className = "jumbo">
                         <h1>FBLA Expert!</h1>
                         <h4>Test Your Knowledge About FBLA!</h4>
                     </Jumbotron>
-                    <Card bg = "light" text = "dark">
-                        <Card.Header className = "card-header"><h2>Create Account</h2></Card.Header>
-                        <Card.Body className = "login-wrapper">
-                            <Form>
-                                <Form.Group>
-                                    <h6 className = 'login-h6'>First Name</h6>
-                                    <Form.Control onChange = {(e) => 
+                    <div className = "home-screen-content">
+                        {/* <Card bg = "light" text = "dark"> */}
+                        {/* <Card.Header className = "card-header"><h2>Login</h2></Card.Header> */}
+                        <Card className = "create-account-wrapper" bg="light">
+                            <h2>Create an Account</h2>
+                            <Form className = "form-login-wrapper">
+                                 <Form.Group>
+                                     <h6 className = 'login-h6'>First Name</h6>
+                                     <Form.Control onChange = {(e) => 
                                         this.setState({firstName: e.target.value})} 
                                     className = "create-textbox" placeholder = "First Name"
                                         autoComplete = "off"
@@ -197,26 +199,89 @@ class LoginPage extends React.Component {
                                     />
                                 </Form.Group>
                                 <h5 className = "error-message">{this.state.message}</h5>
+                                <div>
                                 <Button onClick = {() =>
                                 this.handleCreate(this.state.firstName, this.state.lastName, this.state.new_email, 
                                 this.state.new_password, this.state.retype_password)}
                                 className = "done">Done</Button>
                                 <Button onClick = {() => this.setState({create: false})}>Back</Button>
+                                </div>
                             </Form>
-                        </Card.Body>
-                    </Card>
+                        </Card>
+                    </div>
+                    
                 </div>
+                // <div className = "home-screen">
+                //     <Jumbotron className = "jumbo">
+                //         <h1>FBLA Expert!</h1>
+                //         <h4>Test Your Knowledge About FBLA!</h4>
+                //     </Jumbotron>
+                //     <Card bg = "light" text = "dark">
+                //         <Card.Header className = "card-header"><h2>Create Account</h2></Card.Header>
+                //         <Card.Body className = "login-wrapper">
+                //             <Form>
+                //                 <Form.Group>
+                //                     <h6 className = 'login-h6'>First Name</h6>
+                //                     <Form.Control onChange = {(e) => 
+                //                         this.setState({firstName: e.target.value})} 
+                //                     className = "create-textbox" placeholder = "First Name"
+                //                         autoComplete = "off"
+                //                     />
+                //                 </Form.Group>
+                //                 <Form.Group>
+                //                     <h6 className = 'login-h6'>Last Name</h6>
+                //                     <Form.Control onChange = {(e) =>
+                //                         this.setState({lastName: e.target.value})} 
+                //                     className = "create-textbox" placeholder = "Last Name"
+                //                         autoComplete = "off"
+                //                     />
+                //                 </Form.Group>
+                //                 <Form.Group>
+                //                     <h6 className = 'login-h6'>Email</h6>
+                //                     <Form.Control onChange = {(e) => 
+                //                         this.setState({new_email:  e.target.value})} 
+                //                     className = "create-textbox" placeholder = "Email"
+                //                     autoComplete = "off"
+                //                     />
+                //                 </Form.Group>
+                //                 <Form.Group>
+                //                     <h6 className = 'login-h6'>Password</h6>
+                //                     <Form.Control onChange = {(e) =>
+                //                         this.handleCreatePasswordChange(e.target.value)}
+                //                     className = "create-textbox" placeholder = "Password"
+                //                         type = "password" autoComplete = "off"
+                //                     />
+                //                     <h5 className = "password-info">{this.state.password_info}</h5>
+                //                 </Form.Group>
+                //                 <Form.Group>
+                //                     <h6 className = 'login-h6'>Retype Password</h6>
+                //                     <Form.Control onChange = {(e) =>
+                //                         this.setState({retype_password: e.target.value})}
+                //                     className = "create-textbox" placeholder = "Password"
+                //                         type = "password" autoComplete = "off"
+                //                     />
+                //                 </Form.Group>
+                //                 <h5 className = "error-message">{this.state.message}</h5>
+                //                 <Button onClick = {() =>
+                //                 this.handleCreate(this.state.firstName, this.state.lastName, this.state.new_email, 
+                //                 this.state.new_password, this.state.retype_password)}
+                //                 className = "done">Done</Button>
+                //                 <Button onClick = {() => this.setState({create: false})}>Back</Button>
+                //             </Form>
+                //         </Card.Body>
+                //     </Card>
+                // </div>
             )
         } else{
             return(
-                <div>
+                <div className = "home-screen">
                     <Jumbotron className = "jumbo">
                         <h1>FBLA Expert!</h1>
                         <h4>Test Your Knowledge About FBLA!</h4>
                     </Jumbotron>
-                    <Card bg = "light" text = "dark">
-                        <Card.Header className = "card-header"><h2>Login</h2></Card.Header>
-                        <Card.Body className = "login-wrapper">
+                    <div className = "home-screen-content">
+                        <Card className = "login-wrapper" bg="light">
+                            <h2>Login</h2>
                             <Form>
                                 <Form.Group>
                                     <Form.Control onChange = {(e) =>
@@ -240,8 +305,16 @@ class LoginPage extends React.Component {
                                     create: true
                                 })}>Sign Up</Button>
                             </Form>
-                        </Card.Body>
-                    </Card>
+                        </Card>
+                        <div className = "About-FBLA">
+                            <Card.Title className="home-title"><h4>Learn more about FBLA</h4></Card.Title>
+                            <div className = "FBLA-website">
+                                <Card.Img src="https://logodix.com/logo/1610537.png"/>
+                                <Button target="_blank" href="https://www.fbla-pbl.org/about/" variant="outline-primary">View Website</Button>
+                            </div>                            
+                        </div>
+                    </div>
+                    
                 </div>
             )
         }

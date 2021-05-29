@@ -60,7 +60,7 @@ class DropdownQuestion extends React.Component {
                                     <InputGroup.Text id="inputGroup-sizing-default"><img src = {xmark} alt = "xmark"/></InputGroup.Text>
                                 </InputGroup.Append>
                             </InputGroup>
-                            <InputGroup className = "mb3 input-group-display">
+                            <InputGroup className = "mb3 input-group-display" key = "correct-dropdown-answer">
                                 <Form.Control placeholder = {this.props.answerChoices[this.props.answer]}   disabled 
                                 aria-label="Default"
                                 aria-describedby="inputGroup-sizing-default"

@@ -7,7 +7,7 @@ import 'firebase/firestore';
 
 //Login page and function for getting the question data from the database
 import LoginPage from "./components/Login/Login"
-import GetData from "./components/DataFetching/GetData"
+import GetData from "./components/Quiz/DataFetching/GetData"
 
 //styling components from React Bootstrap
 import Jumbotron from "react-bootstrap/Jumbotron";
@@ -18,14 +18,16 @@ import Dropdown from "react-bootstrap/Dropdown";
 
 
 //Question components (e.g. radio buttons, textboxes) for the questions
-import DropdownQuestion from "./components/Questions/Dropdown/Dropdown.js"
-import FillInBlank from "./components/Questions/FillTheBlank/FillTheBlank.js";
-import MultChoice from "./components/Questions/MultChoice/MultChoice.js";
-import TrueFalse from "./components/Questions/TrueFalse/TrueFalse.js"
+import DropdownQuestion from "./components/Quiz/Dropdown/Dropdown.js"
+import FillInBlank from "./components/Quiz/FillTheBlank/FillTheBlank.js";
+import MultChoice from "./components/Quiz/MultChoice/MultChoice.js";
+// import TrueFalse from "./components/Quiz/TrueFalse/TrueFalse.js"
 
 //features for the results page: generating report, and viewing statistics
-import generatePDF from "./components/Report/GeneratePDF.js"
-import ViewStatistics from "./components/Report/Statistics"
+import generatePDF from "./components/Quiz/Report/GeneratePDF.js"
+import ViewStatistics from "./components/Quiz/Report/Statistics"
+import Leaderboard from "./components/Leaderboard/Leaderboard"
+// import { Card } from "react-bootstrap";
 
 //main class that is being loaded into the HTML
 class App extends React.Component {
@@ -56,7 +58,7 @@ class App extends React.Component {
       fillBlankAnswerState: null,
       fillBlankError: false,
       trueFalseQuestion: null,
-      trueFalseText: 'True/False',
+      trueFalseState: null,
       trueFalseCorrect: 0,
       submissionState: null,
     }
@@ -65,17 +67,49 @@ class App extends React.Component {
   
   //gets called when the quiz page loads to get the user's information (e.g. name)
   //also handles logout
+  // componentDidMount(){
+  //   firebase.auth().onAuthStateChanged(async firebaseUser => {
+  //     if (firebaseUser) {
+  //       var firebaseApp = firebase.apps[0]
+  //       this.db = firebaseApp.firestore()
+  //       this.readUserRef = this.db.collection("UserData").where(
+  //         "Email", "==", firebase.auth().currentUser.email)
+  //       await this.readUserRef.get().then((querySnapshot) => {
+  //         querySnapshot.forEach((doc) => {
+  //           this.userData = doc.data();
+  //           this.writeUserRef = this.db.collection("UserData").doc(doc.id)
+  //         })
+  //         this.setState({
+  //           logged_in: true,
+  //         })
+  //         this.handleNewTake()
+  //       })
+  //     } else {
+  //       this.setState({
+  //         logged_in : false,
+  //         written: false,
+  //         login_error: false,
+  //         create_error: false,
+  //         fetched: false,
+  //         submitted: false,
+  //         submissionState: null
+  //       })
+  //     }
+  //   })
+  // }
+
   componentDidMount(){
     firebase.auth().onAuthStateChanged(async firebaseUser => {
       if (firebaseUser) {
         var firebaseApp = firebase.apps[0]
         this.db = firebaseApp.firestore()
-        this.readUserRef = this.db.collection("UserData").where(
+        this.allUserData = this.db.collection("UserData")
+        this.readUserRef = this.allUserData.where(
           "Email", "==", firebase.auth().currentUser.email)
         await this.readUserRef.get().then((querySnapshot) => {
           querySnapshot.forEach((doc) => {
             this.userData = doc.data();
-            this.writeUserRef = this.db.collection("UserData").doc(doc.id)
+            this.writeUserRef = this.allUserData.doc(doc.id)
           })
           this.setState({
             logged_in: true,
@@ -113,11 +147,11 @@ class App extends React.Component {
     })
   }
 
-  handleTrueFalseSelect = (e) => {
-    this.setState({
-      trueFalseText: e,
-    })
-  }
+  // handleTrueFalseSelect = (i, q, e) => {
+  //   this.setState({
+  //     trueFalseState: (i === 0 ? 'True' : 'False'),
+  //   })
+  // }
  
   //below three functions use firebase auth for login
   //authenticating existing account 
@@ -164,7 +198,7 @@ class App extends React.Component {
           create_error: false
         })
         if (!(this.state.written) && !(this.state.create_error)){
-          this.writeUserRef = firebase.apps[0].firestore().collection("UserData").doc()
+          this.writeUserRef = this.allUserData.doc()
           this.writeUserRef.set({
             Name: firstName + " " + lastName,
             Email: email,
@@ -207,6 +241,11 @@ class App extends React.Component {
         multChoiceState2: i
       })
     }
+    if (q === 3){
+      this.setState({
+        trueFalseState: i
+      })
+    }
   }
 
   //checks that all questions 
@@ -220,7 +259,7 @@ class App extends React.Component {
     if (this.state.multChoiceState1 === null 
       || this.state.multChoiceState2 === null
       || this.state.dropdownState === null
-      || this.state.trueFalseText === 'True/False'
+      || this.state.trueFalseState === null
       || this.state.fillBlankText === ''
       || this.state.fillBlankError) {
         this.setState({
@@ -240,7 +279,7 @@ class App extends React.Component {
             dropdownCorrect: (this.state.dropdownState === await this.dropdownData.Answer ? 1: 0),
           }, async () => {
             this.setState({
-              trueFalseCorrect: (this.state.trueFalseText.toLowerCase() === await this.truefalseData.Answer.toString() ? 1: 0),
+              trueFalseCorrect: (Boolean(this.state.trueFalseState) !== await this.truefalseData.Answer ? 1: 0),
             }, async() => {
               this.setState({
                 fillBlankCorrect: (this.state.fillBlankText.toLowerCase() === await this.fillBlankData.Answer ? 1 : 0),
@@ -265,6 +304,7 @@ class App extends React.Component {
                     this.setState({
                       submitted: true
                     })
+                    this.allUserData = this.db.collection("UserData")
                   })
                 })
               }) 
@@ -305,7 +345,7 @@ class App extends React.Component {
       //     type: "True or False",
       //     question: this.state.trueFalseQuestion,
       //     answer: this.truefalseData.Answer ? "True" : "False",
-      //     selected: this.state.trueFalseText,
+      //     selected: this.state.trueFalseState,
       //     points: this.state.trueFalseCorrect
       //   }
       // ], this.userData.Name, false)
@@ -358,7 +398,7 @@ class App extends React.Component {
         dropdownCorrect: 0,
         fillBlankCorrect: 0,
         fillBlankText: '',
-        trueFalseText: 'True/False',
+        trueFalseState: null,
         trueFalseCorrect: 0,
         submissionState: null,
         submitted: false,
@@ -369,7 +409,6 @@ class App extends React.Component {
   }
 
   createPDF = (showDialog) => {
-    console.log("I am creating a PDF! With " + showDialog + "dialog")
     generatePDF([
         {
           type: "Dropdown",
@@ -403,7 +442,7 @@ class App extends React.Component {
           type: "True or False",
           question: this.state.trueFalseQuestion,
           answer: this.truefalseData.Answer ? "True" : "False",
-          selected: this.state.trueFalseText,
+          selected: this.state.trueFalseState === 0 ? "True" : "False",
           points: this.state.trueFalseCorrect
         }
       ], this.userData.Name, showDialog)
@@ -412,12 +451,12 @@ class App extends React.Component {
 
   render = () => {
     if (!this.state.logged_in){
-      return (
-        //rending Login component from another file, uses passed props to reference
-        <LoginPage onLogin = {this.handleLogin} onCreate = {this.handleCreate}
-        error = {this.state.login_error} create_error = {this.state.create_error}
-          create_error_message = {this.state.create_error_message}
-        />
+      return (  
+          //rending Login component from another file, uses passed props to reference
+          <LoginPage id="loginpage" onLogin = {this.handleLogin} onCreate = {this.handleCreate}
+          error = {this.state.login_error} create_error = {this.state.create_error}
+            create_error_message = {this.state.create_error_message}
+          />
       )
     } else {
       if (this.state.fetched) {
@@ -432,7 +471,7 @@ class App extends React.Component {
                   <h1>Welcome, {this.userData.Name.split(" ")[0]}</h1>
                   <h4>Are you an FBLA Expert?</h4>
                 </Jumbotron>
-                <Dropdown>
+                <Dropdown className = "logout">
                     <Dropdown.Toggle variant="outline-primary">
                       {this.userData.Name}
                     </Dropdown.Toggle>
@@ -447,6 +486,7 @@ class App extends React.Component {
                         lowestScore = {this.userData.Lowest_Score} average = {this.userData.Average}
                         attempts = {this.userData.Scores.length}
                       />
+                      <Leaderboard data = {this.allUserData}/>     
                     </Dropdown.Menu>
                 </Dropdown>
                 {/* <Button variant = "outline-primary" onClick = {this.handleLogout}>Logout</Button> */}
@@ -474,11 +514,12 @@ class App extends React.Component {
                 <MultChoice onSelect = {(i, q) => this.handleMultChoiceSelect(i, q)} disabled = 'false' 
                 answerChoices = {this.state.multChoices2} question = '2'/>
               </div>
-              <div className = "question dropdown">
+              <div id = "mult-choice" className = "question">
                 <h5>5. {this.state.trueFalseQuestion}</h5>
-                <TrueFalse onSelect = {this.handleTrueFalseSelect} value = {this.state.trueFalseText}
-                  disabled = 'false'
+                <MultChoice onSelect = {(i, q) => this.handleMultChoiceSelect(i, q)} disabled = 'false'
+                  answerChoices = {['True', 'False']} question = '3'
                 />
+                {/* <TrueFalse onSelect = {this.handleTrueFalseSelect} disabled = 'false'/> */}
               </div>
               <div className = 'submissionError'>
                 <h5>{this.state.submissionState}</h5>
@@ -499,7 +540,7 @@ class App extends React.Component {
                   <h1>FBLA Expert</h1>
                   <h4>Score: {this.score}/5</h4>
                 </Jumbotron>
-                <Dropdown>
+                <Dropdown className = "logout">
                     <Dropdown.Toggle variant="outline-primary">
                       {this.userData.Name}
                     </Dropdown.Toggle>
@@ -514,6 +555,7 @@ class App extends React.Component {
                         lowestScore = {this.userData.Lowest_Score} average = {this.userData.Average}
                         attempts = {this.userData.Scores.length}
                       />
+                      <Leaderboard data = {this.allUserData}  />     
                     </Dropdown.Menu>
                 </Dropdown>
               </header>
@@ -547,8 +589,8 @@ class App extends React.Component {
                 <h5><strong>{this.state.trueFalseCorrect === 1 ? "Correct Answer" : "Incorrect Answer"}</strong></h5>
                 <h6>5. {this.state.trueFalseQuestion}</h6>
                 {/* <TrueFalse disabled = 'true' answer = {this.truefalseData.Answer}/> */}
-                <MultChoice answerChoices = {['True', 'False']} disabled = 'true' selected = {['True, False'].indexOf(this.trueFalseText)}
-                answer = {this.truefalseData.Answer ? 0 : 1}></MultChoice>
+                <MultChoice answerChoices = {['True', 'False']} disabled = 'true' selected = {this.state.trueFalseState}
+                answer = {this.truefalseData.Answer ? 0 : 1}/>
               </div>
               <br></br>
               <div className = "submission-options">
@@ -592,15 +634,12 @@ class App extends React.Component {
                 //     type: "True or False",
                 //     question: this.state.trueFalseQuestion,
                 //     answer: this.truefalseData.Answer ? "True" : "False",
-                //     selected: this.state.trueFalseText,
+                //     selected: this.state.trueFalseState,
                 //     points: this.state.trueFalseCorrect
                 //   }
                 // ], this.userData.Name)}
                 >Download Results</Button>
-                {/*Displays user's quiz score statistics in a popup*/}
-                <ViewStatistics menuItem = "false" highScore = {this.userData.Highest_Score}
-                  lowestScore = {this.userData.Lowest_Score} average = {this.userData.Average}
-                 attempts = {this.userData.Scores.length}/>
+                
                 {/* <Button variant="info" onClick={<ViewStatistics
                   highScore = {this.userData.Highest_Score}
                   lowestScore = {this.userData.Lowest_Score} average = {this.userData.Average}
@@ -608,7 +647,11 @@ class App extends React.Component {
                 View Statistics
                 </Button> */}
                 </div>
-              </div>     
+                {/*Displays user's quiz score statistics in a popup*/}
+                <ViewStatistics menuItem = "false" highScore = {this.userData.Highest_Score}
+                  lowestScore = {this.userData.Lowest_Score} average = {this.userData.Average}
+                 attempts = {this.userData.Scores.length}/>
+              </div>
             </div>
           )
         }
