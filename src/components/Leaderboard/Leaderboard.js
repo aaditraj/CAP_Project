@@ -4,7 +4,9 @@ import firebase from "firebase/app";
 import Dropdown from "react-bootstrap/Dropdown";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
-import "./Leaderboard.css";
+import Spinner from "react-bootstrap/Spinner"
+import Jumbotron from "react-bootstrap/Jumbotron"
+// import "./Leaderboard.css";
 
 
 
@@ -58,9 +60,9 @@ class Leaderboard extends React.Component {
         })
 
     }
-    // async componentDidMount() {
-    //     this.updateScores(false)
-    // }
+    async componentDidMount() {
+        this.updateScores()
+    }
 
 
     // shouldComponentUpdate(nextProps) {
@@ -95,39 +97,40 @@ class Leaderboard extends React.Component {
             )
             place += 1
         })
-
-        return (
-            <>
-            <Dropdown.Item onSelect={() => {this.updateScores()}}>
-                Leaderboard
-            </Dropdown.Item>
-            <Modal show={this.state.show} onHide={() => this.setState({show: false})}>
-                <Modal.Header closeButton>
-                  <Modal.Title>Leaderboard</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Table id = "leaderboard" striped bordered hover responsive = "md" variant="light">
-                    <thead>
-                        <tr>
-                        <th>Place</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Average Score</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {components}
-                    </tbody>
-                    </Table>
-                </Modal.Body>
-                <Modal.Footer>
-                  <Button variant="secondary" onClick={() => {this.setState({show: false})}}>
-                    Close
-                  </Button>
-                </Modal.Footer>
-              </Modal>
-            </>
-        )
+        if (this.state.show){
+            return (
+                <div className="leaderboard">
+                    <Jumbotron className = "jumbo">
+                        <h1>FBLA Expert</h1>
+                        <h4>Leaderboard</h4>
+                    </Jumbotron>
+                    
+                    <div  id = "leaderboard">
+                        <Table striped hover responsive = "md" variant="light">
+                            <thead>
+                                <tr>
+                                <th>Place</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Average Score</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {components}
+                            </tbody>
+                        </Table>
+                    </div>
+                </div>
+            )
+        } else {
+            return (
+                <div className = "loading-screen">
+                <h1>Loading...</h1>
+                <Spinner animation="border" variant="light" />
+                </div>
+            )
+        }
+        
     }
 }
 

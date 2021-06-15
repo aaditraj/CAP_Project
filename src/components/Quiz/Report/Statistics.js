@@ -15,44 +15,52 @@ class ViewStatistics extends React.Component {
   
     render(){
       let controller;
-        if (this.props.menuItem === "true"){
-          controller = <Dropdown.Item onClick={() => {this.setState({show: true})}}>
-            View Statistics
-          </Dropdown.Item>
-        } else {
-          controller = <Button variant="info" onClick={() => {this.setState({show: true})}}>
-          View Statistics
-          </Button>
-        }
-        return (
-            <>
-              {controller}
-              <Modal show={this.state.show} onHide={() => this.setState({show: false})}>
-                <Modal.Header closeButton>
-                  <Modal.Title>Statistics</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <div>
-                        <h5>Highest Score: {this.props.highScore}</h5>
-                    </div>
-                    <div>
-                        <h5>Lowest Score: {this.props.lowestScore}</h5>
-                    </div>
-                    <div>
-                        <h5>Average Score: {this.props.average}</h5>
-                    </div>
-                    <div>
-                        <h5>Attempts: {this.props.attempts}</h5>
-                    </div>
-                </Modal.Body>
-                <Modal.Footer>
-                  <Button variant="secondary" onClick={() => {this.setState({show: false})}}>
-                    Close
-                  </Button>
-                </Modal.Footer>
-              </Modal>
-            </>
-          );
+      let components = [];
+      if (this.props.itemFormat === "navItem") {
+        controller = <Button className="user-option stats" variant="link" 
+        onClick={() => {this.setState({show: true})}}>Statistics</Button>
+
+      } else {
+        controller = <Button className="stats" variant="info" 
+        onClick={() => {this.setState({show: true})}}>Statistics</Button>
+      }
+      
+      if (this.props.attempts === 0){
+        components.push(<h4 className="no-quizzes-disclaimer">No Quizzes Yet!</h4>)
+      } else {
+        components.push(
+          <Modal.Body>
+              <div>
+                  <h5>Highest Score: {this.props.highScore}</h5>
+              </div>
+              <div>
+                  <h5>Lowest Score: {this.props.lowestScore}</h5>
+              </div>
+              <div>
+                  <h5>Average Score: {this.props.average}</h5>
+              </div>
+              <div>
+                  <h5>Attempts: {this.props.attempts}</h5>
+              </div>
+          </Modal.Body>
+        )
+      }
+      return (
+          <>
+            {controller}
+            <Modal show={this.state.show} onHide={() => this.setState({show: false})}>
+              <Modal.Header closeButton>
+                <Modal.Title>Statistics</Modal.Title>
+              </Modal.Header>
+              {components}
+              <Modal.Footer>
+                <Button variant="secondary" onClick={() => {this.setState({show: false})}}>
+                  Close
+                </Button>
+              </Modal.Footer>
+            </Modal>
+          </>
+        );
     }
     
   }

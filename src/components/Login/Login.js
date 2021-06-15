@@ -5,7 +5,11 @@ import Form from "react-bootstrap/Form"
 import Button from "react-bootstrap/Button"
 import Card from "react-bootstrap/Card"
 import Alert from "react-bootstrap/Alert"
+import Image from "react-bootstrap/Image"
 import Jumbotron from "react-bootstrap/Jumbotron"
+
+import fblaLogo from "/Users/araj/Desktop/Coding/cap/cap_project/src/assets/fbla-logo.png"
+import cafblaLogo from "/Users/araj/Desktop/Coding/cap/cap_project/src/assets/cafbla-logo.png"
 
 //Styling for login and account creation page
 import "./Login.css"
@@ -13,7 +17,7 @@ import "./Login.css"
 class LoginPage extends React.Component {
     constructor(props) {
         super(props);
-        this.passwordInfo = <Button size = 'sm' onClick = {this.popPasswordRules}
+        this.passwordInfo = <Button className="password-pop" size = 'sm' onClick = {this.popPasswordRules}
         variant = "link">Password Rules</Button>
         this.state = {
             create : false,
@@ -148,7 +152,7 @@ class LoginPage extends React.Component {
             return (
                 <div className = "home-screen">
                     <Jumbotron className = "jumbo">
-                        <h1>FBLA Expert!</h1>
+                        <h1>FBLA Expert</h1>
                         <h4>Test Your Knowledge About FBLA!</h4>
                     </Jumbotron>
                     <div className = "home-screen-content">
@@ -209,6 +213,25 @@ class LoginPage extends React.Component {
                             </Form>
                         </Card>
                     </div>
+                    <footer>
+                        <Card className="app-footer login-footer create-footer">
+                            <Card.Header><h4>Learn More About FBLA</h4></Card.Header>
+                            <Card.Body className="card-body">
+                            <div id="fbla-links">
+                            <a target="_blank" href="https://www.fbla-pbl.org/about/">
+                                <Image src={fblaLogo}/>
+                            </a>
+                            <a target="_blank" href="https://www.cafbla.org/domain/10">
+                                <Image src={cafblaLogo}/>
+                            </a>
+                            <a target="_blank" href="https://www.hhsfbla.com">
+                                <Image src="https://pbs.twimg.com/profile_images/634932700990668800/J4KrGcmG_400x400.jpg"/>
+                            </a>
+                            </div>
+                            </Card.Body>
+                            <Card.Footer>© 2021 - Aaditya Raj</Card.Footer>
+                        </Card>
+                    </footer>
                     
                 </div>
                 // <div className = "home-screen">
@@ -306,14 +329,33 @@ class LoginPage extends React.Component {
                                 })}>Sign Up</Button>
                             </Form>
                         </Card>
-                        <div className = "About-FBLA">
+                        {/* <div className = "About-FBLA">
                             <Card.Title className="home-title"><h4>Learn more about FBLA</h4></Card.Title>
                             <div className = "FBLA-website">
                                 <Card.Img src="https://logodix.com/logo/1610537.png"/>
                                 <Button target="_blank" href="https://www.fbla-pbl.org/about/" variant="outline-primary">View Website</Button>
                             </div>                            
-                        </div>
+                        </div> */}
                     </div>
+                    <footer>
+                        <Card className="app-footer login-footer">
+                            <Card.Header><h4>Learn More About FBLA</h4></Card.Header>
+                            <Card.Body className="card-body">
+                            <div id="fbla-links">
+                            <a target="_blank" href="https://www.fbla-pbl.org/about/">
+                                <Image src={fblaLogo}/>
+                            </a>
+                            <a target="_blank" href="https://www.cafbla.org/domain/10">
+                                <Image src={cafblaLogo}/>
+                            </a>
+                            <a target="_blank" href="https://www.hhsfbla.com">
+                                <Image src="https://pbs.twimg.com/profile_images/634932700990668800/J4KrGcmG_400x400.jpg"/>
+                            </a>
+                            </div>
+                            </Card.Body>
+                            <Card.Footer>© 2021 - Aaditya Raj</Card.Footer>
+                        </Card>
+                    </footer>
                     
                 </div>
             )

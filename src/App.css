@@ -3,10 +3,116 @@
   font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
-.App {
+.Quiz {
   color: black;
   background-color: #1A2E40;
 }
+body{
+  background-color: antiquewhite;
+}
+
+#Choose-Topics{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 38.5px;
+  margin-bottom: 38.5px;
+  padding: 0px 20px;
+}
+
+.topics-wrapper{
+  width: 100%;
+  --auto-grid-min-size: 20rem;
+  margin: 3rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--auto-grid-min-size), 1fr));
+  grid-gap: 3rem;
+  grid-auto-rows: minmax(180px, auto);
+  
+}
+
+.topic-container{
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: space-between;
+}
+
+.topic-image{
+  width: 90%;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url("./assets/svgs/undraw_Terms_re_6ak4.svg");
+  background-size: cover;
+  background-position: center;
+} 
+
+#Know {
+  background-image: url("./assets/svgs/undraw_visual_data_re_mxxo.svg");
+  /* background-size: cover */
+}
+
+#Dates{
+  background-image: url("./assets/svgs/undraw_in_no_time_6igu.svg");
+  /* background-size: cover */
+}
+
+#People{
+  background-image: url("./assets/svgs/undraw_Co_workers_re_1i6i.svg");
+  /* background-size: contain; */
+}
+
+#Places{
+  background-image: url("./assets/svgs/undraw_Around_the_world_re_n353.svg");
+  /* background-size: cover; */
+}
+
+#Potpourri{
+  background-image: url("./assets/svgs/undraw_selected_options_42hx.svg");
+  /* background-size: contain; */
+  background-position-y: 0rem;
+  background-position-x: 1rem;
+}
+
+.middle{
+  background-color: rgb(27, 39, 75);
+  color: antiquewhite;
+  border: none;
+}
+
+.middle:hover{
+  font-size: 1.3rem;
+  transition-property: font;
+  transition-timing-function: ease;
+  transition-duration: 200ms;
+  background-color: #1A2E40;
+  color: antiquewhite
+}  
+
+.topic-image:hover{
+  border: 4px solid #1A2E40;
+  transition-property: border;
+  transition-timing-function: ease;
+  transition-duration: 200ms;
+}
+
+div.leaderboard #leaderboard{
+  height: 70%;
+  max-width: 700px;
+  width: 80%;
+  margin: 50px auto;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+
+
+
+
 
 LoginPage#LoginPage{
   background-color: antiquewhite;
@@ -19,23 +125,110 @@ LoginPage#LoginPage{
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
-  justify-content: center
+  justify-content: center;
+  color: white;
+  background-color: #1A2E40;
 }
+
+nav ul {
+  list-style: none;
+  display: flex;
+  flex-flow: row nowrap;
+  /* justify-content: left; */
+  /* border: 2px solid black; */
+  margin-bottom: 0px;
+  padding-left: 0px;
+}
+
+nav ul>:last-child{
+  margin-left: auto;
+  margin-right: 10px;
+}
+
+
+nav ul li>:nth-child(-n+4){
+  color: black;
+  text-decoration: none;
+  text-align: center;
+  display: block;
+  padding: 15px;
+}
+
+nav ul li .hidden-option{
+  display: none;
+}
+
+
+nav ul li:first-child a{
+border-top: none;
+}
+
+
+  
+
+
+nav ul li:hover {
+background-color: #8AC8FF;
+}
+
+nav ul li a:hover {
+  text-decoration: none;
+  transition-property: color;
+  transition-duration: 250ms;
+  transition-timing-function: ease-in-out
+}
+
+nav ul li{
+transition-property: background-color;
+transition-duration: 250ms;
+transition-timing-function: ease-in-out;
+font-size: 1.25rem;
+}
+
+nav ul li .user-option:hover {
+  text-decoration: none;
+}
+
+nav{
+/* background-color: #6DB7F7; */
+background-color: antiquewhite;
+}
+
+.stats{
+  font-size: 1.25rem;
+}
+
+.logout{
+  margin: auto 0px;
+}
+
 .jumbo{
   /* margin-bottom: 0; */
   background-color: #1A2E40;
   color: antiquewhite;
   padding: 30px;
   text-align: center;
+  margin-bottom: 0px;
+  border-radius: 0px;
 }
 
-header> :nth-child(2){
+.jumbo h4{
+  font-size: 1.75rem
+}
+
+/* header> :nth-child(2){
   position: absolute;
   right: 10px;
   top: 5px
+} */
+
+.go-back{
+  position: absolute;
+  top: 62.5px;
+  left: 5px;
+  text-decoration: underline;
+  font-size: 1.25rem;
 }
-
-
 div.question{
   background-color: antiquewhite;
 }
@@ -91,22 +284,139 @@ div.submissionError h5{
   padding-bottom: 20px;
 }
 
+.no-quizzes-disclaimer{
+  text-align: center;
+  margin: 20px 0px;
+  font-style: oblique;
+  font-weight: 600;
+}
+
 .submission .question h6{
   margin-left: 10px;
 }
 
-/* .submission .question>:nth-child(3){
-  margin-left: 30px;
-} */
 h4, h5, h6{
   font-weight: normal;
 }
+.app-footer{
+  position: static;
+  bottom: 0px;
+  width: 100%;
+  background-color: #1A2E40;
+  color: antiquewhite;
+  border-radius: 0px;
+}
 
-@media only screen and (max-width: 500px) {
-  div.question{
-    font-size: smaller
+
+.app-footer :first-child{
+  text-align: center;
+  text-shadow: 0.5px 0.5px antiquewhite;
+  margin-bottom: 0px;
+}
+
+.app-footer .card-body{
+  background-color: #2c4358;
+}
+.app-footer #fbla-links{
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-around;
+  align-items: center;  
+  margin: 0 auto;
+  width: 50%;
+  min-width: 300px;
+}
+
+.app-footer>:last-child{
+  text-align: right;
+}
+
+
+#fbla-links a img{
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+#fbla-links a{
+  min-width: 90px;
+  max-width: 150px;
+  width: 33.3%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+@media only screen and (max-width: 1000px){
+
+  .topics-wrapper{
+    --auto-grid-min-size: 16rem;
   }
+
+  .app-footer #fbla-links{
+    justify-content: space-evenly;
+    width: 100%;
+  }
+
+  #fbla-links a{
+    width: 20%;
+  }
+}
+
+
+
+@media only screen and (max-width: 550px) {
+
   .submission-options{
     font-size: smaller
   }
+  nav ul{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border: 1px solid black;
+  }
+  nav ul li .user-option{
+    display:block;
+    color: black;
+    text-decoration: none;
+    width: 100%;
+    padding: 15px;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    border-radius: 0px;
+    height: 100%;
+  }
+
+  nav ul li a{
+    border-top: 1px solid black;
+  }
+  
+  nav ul li:nth-child(5){
+    border-left: 1px solid black;
+  }
+
+
+  nav ul>:nth-child(-n+3){
+    grid-column: 1/3;
+  }
+
+
+  header.quiz-header{
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .go-back{
+    position: static;
+    margin-bottom: 10px;
+  }
+
+  .jumbo1{
+    padding-bottom: 0px;
+  }
+
+  .logout{
+    display: none
+  }
+
 }

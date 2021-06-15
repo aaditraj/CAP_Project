@@ -1,0 +1,11 @@
+.feedback{
+    background-color: antiquewhite;
+    padding: 20px 0px;
+}
+
+.feedback-input{
+    box-sizing: border-box;
+    padding: 20px;
+    margin: 20px 50px;
+    border-radius: 10px;
+}
