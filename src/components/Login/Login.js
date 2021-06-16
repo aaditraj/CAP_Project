@@ -299,7 +299,7 @@ class LoginPage extends React.Component {
             return(
                 <div className = "home-screen">
                     <Jumbotron className = "jumbo">
-                        <h1>FBLA Expert!</h1>
+                        <h1>FBLA Expert</h1>
                         <h4>Test Your Knowledge About FBLA!</h4>
                     </Jumbotron>
                     <div className = "home-screen-content">

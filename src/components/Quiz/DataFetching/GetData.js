@@ -9,29 +9,32 @@ export default async function GetData(props) {
     let db = firebaseApp.firestore();
 
     //pick a random question index from the database for each question type
-    let multChoiceQuestions = db.collection("MultipleChoice").doc(selection).collection("Questions")
-    var snap = await multChoiceQuestions.get()
-    let multChosen = Math.floor(Math.random() * snap.size) + 1
+    let multChoiceInfo = db.collection("MultipleChoice").doc("collectionInfo").collection("Topics").doc(selection)
+    let trueFalseInfo = db.collection("TrueFalse").doc("collectionInfo").collection("Topics").doc(selection)
+    let fillBlankInfo = db.collection("FillInTheBlank").doc("collectionInfo").collection("Topics").doc(selection)
+    let dropdownInfo = db.collection("DropDown").doc("collectionInfo").collection("Topics").doc(selection)
+
+    let [snap, snap2, snap3, snap4] = await Promise.all([multChoiceInfo.get(), trueFalseInfo.get(),
+      fillBlankInfo.get(), dropdownInfo.get()])
+
+    
+    let multChosen = Math.floor(Math.random() * snap.data().NoQuestions) + 1
     let multRef = db.collection("MultipleChoice").doc(selection).collection("Questions").doc("" + multChosen);
     
-    let multChosen2 = Math.floor(Math.random() * snap.size) + 1
+    let multChosen2 = Math.floor(Math.random() * snap.data().NoQuestions) + 1
     while (multChosen2 === multChosen){
-      multChosen2 = Math.floor(Math.random() * snap.size) + 1
+      multChosen2 = Math.floor(Math.random() * snap.data().NoQuestions) + 1
     }
-    let multRef2 = db.collection("MultipleChoice").doc(selection).collection("Questions").doc("" + multChosen2);
+    let multRef2 = db.collection("MultipleChoice").doc(selection).collection("Questions").doc("" + multChosen2);;
 
-
-    let trueFalseQuestions = db.collection("TrueFalse").doc(selection).collection("Questions")
-    var snap = await trueFalseQuestions.get()
-    let trueFalseRef = db.collection("TrueFalse").doc(selection).collection("Questions").doc("" + (Math.floor(Math.random() * snap.size) + 1));
+    // let trueFalseQuestions = db.collection("TrueFalse").doc(selection).collection("Questions")
+    let trueFalseRef = db.collection("TrueFalse").doc(selection).collection("Questions").doc("" + (Math.floor(Math.random() * snap2.data().NoQuestions) + 1));
     
-    let fillBlankQuestions = db.collection("FillInTheBlank").doc(selection).collection("Questions")
-    snap = await fillBlankQuestions.get()
-    let fillBlankRef = db.collection("FillInTheBlank").doc(selection).collection("Questions").doc("" + (Math.floor(Math.random() * snap.size) + 1));
+    // let fillBlankQuestions = db.collection("FillInTheBlank").doc(selection).collection("Questions")
+    let fillBlankRef = db.collection("FillInTheBlank").doc(selection).collection("Questions").doc("" + (Math.floor(Math.random() * snap3.data().NoQuestions) + 1));
  
-    let dropdownQuestions = db.collection("DropDown").doc(selection).collection("Questions")
-    snap = await dropdownQuestions.get()
-    let dropdownRef = db.collection("DropDown").doc(selection).collection("Questions").doc("" + (Math.floor(Math.random() * snap.size) + 1));
+    // let dropdownQuestions = db.collection("DropDown").doc(selection).collection("Questions")
+    let dropdownRef = db.collection("DropDown").doc(selection).collection("Questions").doc("" + (Math.floor(Math.random() * snap4.data().NoQuestions) + 1));
 
     //wait for the data
     let [multipleChoice, multipleChoice2, dropdown, trueFalse, fillInTheBlank] = await Promise.all([multRef.get(), multRef2.get(), dropdownRef.get(), trueFalseRef.get(), fillBlankRef.get()])

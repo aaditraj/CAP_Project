@@ -51,7 +51,8 @@ class AppTest extends React.Component {
       login_error: false,
       create_error: false,
       create_error_message: null,
-      userData: null
+      userData: null,
+      allDataFetched: false
     }
 
   }
@@ -83,23 +84,31 @@ class AppTest extends React.Component {
   getUserData = async () => {
     var firebaseApp = firebase.apps[0]
     this.db = firebaseApp.firestore()
-    this.allUserData = this.db.collection("UserData")
-    this.readUserRef = this.allUserData.where(
+    this.allUserData = await this.db.collection("UserData").get()
+    this.setState({
+      allDataFetched: true
+    })
+    // this.allUserData = this.db.collection("UserData")
+    this.readUserRef = this.db.collection("UserData").where(
       "Email", "==", firebase.auth().currentUser.email)
     await this.readUserRef.get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         this.setState({
-            userData: doc.data()
+            userData: doc.data(),
+            userDataFetched: true
         })
       })
     })
   }
 
-  updateUserData = (newUserData) => {
+  updateUserData = async (newUserData) => {
       this.setState({
           userData: newUserData
       })
-      this.allUserData = this.db.collection("UserData").get()
+      this.allUserData = await this.db.collection("UserData").get()
+      this.setState({
+        allDataFetched: true
+      })
   }
   
  
@@ -116,12 +125,10 @@ class AppTest extends React.Component {
     })
     firebase.auth().onAuthStateChanged((firebaseUser) => {
       if (firebaseUser){
-        this.getUserData().then(() => {
-            this.setState({
-                logged_in: true,
-            })
+        this.getUserData()
+        this.setState({
+            logged_in: true,
         })
-      
       }
     })
   }
@@ -211,14 +218,17 @@ class AppTest extends React.Component {
                                 <li><Link to="/">Home</Link></li>
                                 {/* <li><Link to="/past-quizzes">Past Quizzes</Link></li> */}
                                 <li><Link to="/leaderboard">Leaderboard</Link></li>
+                                <li><Link to="/feedback">Feedback</Link></li>
                                 <li>
-                                <ViewStatistics
+                                {/* <ViewStatistics
                                         itemFormat = "navItem" highScore = {this.state.userData.Highest_Score}
                                         lowestScore = {this.state.userData.Lowest_Score} average = {this.state.userData.Average}
                                         attempts = {this.state.userData.Scores.length}
-                                        />
+                                        /> */}
+                                <ViewStatistics
+                                itemFormat = "navItem" data={this.state.userData} fetched={this.state.userDataFetched}
+                                /> 
                                 </li>
-                                <li><Link to="/feedback">Feedback</Link></li>
                                 <li><Button onClick={this.handleLogout} className="user-option hidden-option" variant="link">Logout</Button></li>
                                 <Dropdown className = "logout">
                                     <Dropdown.Toggle variant="dark">
@@ -256,7 +266,8 @@ class AppTest extends React.Component {
                             </Route> */}
                             <Route path="/leaderboard">
                                 {/* <div className = "leaderboard"> */}
-                                    <Leaderboard data = {this.allUserData}/>     
+                                    <Leaderboard fetched={this.state.allDataFetched}
+                                    data = {this.allUserData}/>     
                                 {/* </div> */}
                             </Route>
                             <Route path="/feedback">

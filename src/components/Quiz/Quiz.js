@@ -167,7 +167,8 @@ class Quiz extends React.Component {
         || this.state.fillBlankText === ''
         || this.state.fillBlankError) {
             this.setState({
-            submissionState: <Alert variant="danger" dismissible
+            submissionState: <Alert className="submission-alert"
+            variant="danger" dismissible
             onClose = {() => this.setState({
                 submissionState: null
             })}>Please attempt all questions and fix any errors.</Alert>
@@ -187,7 +188,8 @@ class Quiz extends React.Component {
                 }, async() => {
                 this.setState({
                     fillBlankCorrect: (this.state.fillBlankText.toLowerCase() === await this.fillBlankData.Answer ? 1 : 0),
-                    submissionState: <Alert variant="info" >Processing your submission...</Alert>
+                    submissionState: <Alert className="submission-alert"
+                    variant="info" >Processing your submission...</Alert>
                 }, async () => {
                     this.score = this.state.multChoiceCorrect1
                     + this.state.multChoiceCorrect2 + this.state.dropdownCorrect + 
@@ -411,12 +413,20 @@ class Quiz extends React.Component {
         //if question data fetched & user has not submitted, render a welcome message
         //and a div for each question. Question components do not include the actual question
         if (this.state.submitted === false){
+            let components = []
+            if (this.state.submissionState !== null){
+                components.push(
+                    <div className = 'submissionError'>
+                    {this.state.submissionState}
+                    </div>
+                )
+            }
             return (
             <div className="Quiz">
                 <header className="quiz-header">
                     <Jumbotron className = "jumbo jumbo1">
-                        <h1>{this.state.selection}</h1>
-                        <h4>Are you an FBLA Expert?</h4>
+                        <h1>FBLA Expert</h1>
+                        <h4>{this.state.selection}</h4>
                     </Jumbotron>
                     {/* <Button variant="link"
                     className="go-back" onClick = {() => this.setState({fetched: false, selection: null})}>Back</Button> */}
@@ -470,13 +480,12 @@ class Quiz extends React.Component {
                 />
                 {/* <TrueFalse onSelect = {this.handleTrueFalseSelect} disabled = 'false'/> */}
                 </div>
-                <div className = 'submissionError'>
-                <h5>{this.state.submissionState}</h5>
-                </div>
+                {components}
                 <div className = "submit">
                 <Button id = "submit-button"
-                variant = "success" type = "submit" 
-                onClick = {this.handleSubmit}><strong>Submit</strong></Button>
+                type = "submit" 
+                onClick = {this.handleSubmit}><strong>
+                <h4>Submit</h4></strong></Button>
                 </div>
             </div>
         )} else { 
@@ -486,8 +495,8 @@ class Quiz extends React.Component {
             <div className = "Quiz submission">
                 <header>
                 <Jumbotron className = "jumbo">
-                    <h1>{this.state.selection}</h1>
-                    <h4>Score: {this.score}/5</h4>
+                    <h1>FBLA Expert</h1>
+                    <h4>You scored {this.score}/5 in "{this.state.selection}"</h4>
                 </Jumbotron>
                 </header>
                 <div className = 'question dropdown'>
@@ -523,20 +532,19 @@ class Quiz extends React.Component {
                 <MultChoice answerChoices = {['True', 'False']} disabled = 'true' selected = {this.state.trueFalseState}
                 answer = {this.truefalseData.Answer ? 0 : 1}/>
                 </div>
-                <br></br>
                 <div className = "submission-options">
                 {/*Three submission options, clicking download report button
                 creates a pdf with the current quiz results, which are passed as a paramater*/}
-                <div className = "retake">
-                <Button as={Link} to="/">Take Another Quiz</Button>
+                <div className = "take-another-quiz">
+                <Button id="retake-button" as={Link} to="/">
+                <h4>Take Another Quiz</h4></Button>
                 </div>
                 <div className = "export">
-                <Button variant = "warning" onClick = {() => this.createPDF(true)}>Download Results</Button>
+                <Button variant = "primary" onClick = {() => this.createPDF(true)}>
+                <h4>Download Results</h4></Button>
                 </div>
                 {/*Displays user's quiz score statistics in a popup*/}
-                <ViewStatistics itemFormat = "button" highScore = {this.userData.Highest_Score}
-                    lowestScore = {this.userData.Lowest_Score} average = {this.userData.Average}
-                    attempts = {this.userData.Scores.length}/>
+                <ViewStatistics itemFormat = "button" fetched={true} data={this.userData}/>
                 </div>
             </div>
             )

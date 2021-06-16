@@ -21,29 +21,34 @@ class ViewStatistics extends React.Component {
         onClick={() => {this.setState({show: true})}}>Statistics</Button>
 
       } else {
-        controller = <Button className="stats" variant="info" 
-        onClick={() => {this.setState({show: true})}}>Statistics</Button>
+        controller = <Button variant="primary" 
+        onClick={() => {this.setState({show: true})}}>
+        <h4>Statistics</h4></Button>
       }
-      
-      if (this.props.attempts === 0){
-        components.push(<h4 className="no-quizzes-disclaimer">No Quizzes Yet!</h4>)
+      if(this.props.fetched){
+        if (this.props.attempts === 0){
+          components.push(<h4 className="no-quizzes-disclaimer">You have not attempted any quizzes so far.
+          Please take a quiz.</h4>)
+        } else {
+          components.push(
+            <Modal.Body className="statistics-modal">
+                
+              <h5><p>Highest Score:</p><p>{this.props.data.Highest_Score}</p></h5>
+          
+          
+              <h5><p>Lowest Score:</p> <p>{this.props.data.Lowest_Score}</p></h5>
+          
+          
+              <h5><p>Average Score: </p><p>{this.props.data.Average}</p></h5>
+          
+          
+              <h5><p>Attempts: </p><p>{this.props.data.Scores.length}</p></h5>
+                
+            </Modal.Body>
+          )
+        }
       } else {
-        components.push(
-          <Modal.Body>
-              <div>
-                  <h5>Highest Score: {this.props.highScore}</h5>
-              </div>
-              <div>
-                  <h5>Lowest Score: {this.props.lowestScore}</h5>
-              </div>
-              <div>
-                  <h5>Average Score: {this.props.average}</h5>
-              </div>
-              <div>
-                  <h5>Attempts: {this.props.attempts}</h5>
-              </div>
-          </Modal.Body>
-        )
+        components.push(<Modal.Body></Modal.Body>)
       }
       return (
           <>

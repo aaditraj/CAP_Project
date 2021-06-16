@@ -24,13 +24,14 @@ class Leaderboard extends React.Component {
         this.setState({
             scores: []
         })
-        var firebaseApp = firebase.apps[0]
-        var db = firebaseApp.firestore()
-        var userData = db.collection("UserData")
-        console.log("I am updating the scores :)")
-        await userData.get().then((querySnapshot) => {
-            console.log("Fetched the user data!")
-            querySnapshot.forEach((doc) => {
+        // var firebaseApp = firebase.apps[0]
+        // var db = firebaseApp.firestore()
+        // var userData = db.collection("UserData")
+        // console.log("I am updating the scores :)")
+        // await userData.get().then((querySnapshot) => {
+        //     console.log("Fetched the user data!")
+        console.log(this.props.data)
+            this.props.data.forEach((doc) => {
                 var data = doc.data()
                 var name = data.Name
                 console.log(name)
@@ -53,7 +54,7 @@ class Leaderboard extends React.Component {
                 })
             }
             console.log("updated scores: " + this.state.scores)          
-        })
+        // })
         console.log(this.state.scores)
         this.setState({
             show: true
@@ -61,7 +62,7 @@ class Leaderboard extends React.Component {
 
     }
     async componentDidMount() {
-        this.updateScores()
+        if(this.props.fetched){ this.updateScores()}
     }
 
 
@@ -97,7 +98,7 @@ class Leaderboard extends React.Component {
             )
             place += 1
         })
-        if (this.state.show){
+        if (this.state.show && this.props.fetched){
             return (
                 <div className="leaderboard">
                     <Jumbotron className = "jumbo">
@@ -107,7 +108,7 @@ class Leaderboard extends React.Component {
                     
                     <div  id = "leaderboard">
                         <Table striped hover responsive = "md" variant="light">
-                            <thead>
+                            <thead className="table-heading">
                                 <tr>
                                 <th>Place</th>
                                 <th>First Name</th>

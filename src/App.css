@@ -79,25 +79,25 @@ body{
 }
 
 .middle{
-  background-color: rgb(27, 39, 75);
+  background-color: #5A618C;
   color: antiquewhite;
-  border: none;
+  border: 1px solid black;
 }
 
 .middle:hover{
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   transition-property: font;
   transition-timing-function: ease;
   transition-duration: 200ms;
   background-color: #1A2E40;
-  color: antiquewhite
+  border: 1px solid black;
 }  
 
 .topic-image:hover{
-  border: 4px solid #1A2E40;
+  border: 4px ridge #1A2E40;
   transition-property: border;
-  transition-timing-function: ease;
-  transition-duration: 200ms;
+  transition-timing-function: cubic-bezier(1, 0, 0, 1);
+  transition-duration: 100ms;
 }
 
 div.leaderboard #leaderboard{
@@ -105,8 +105,13 @@ div.leaderboard #leaderboard{
   max-width: 700px;
   width: 80%;
   margin: 50px auto;
-  border-radius: 10px;
-  overflow: hidden;
+  text-align: center;
+}
+
+.table-heading{
+  font-size: larger;
+  background-color: #1A2E40;
+  color: antiquewhite;
 }
 
 
@@ -134,8 +139,6 @@ nav ul {
   list-style: none;
   display: flex;
   flex-flow: row nowrap;
-  /* justify-content: left; */
-  /* border: 2px solid black; */
   margin-bottom: 0px;
   padding-left: 0px;
 }
@@ -156,16 +159,13 @@ nav ul li>:nth-child(-n+4){
 
 nav ul li .hidden-option{
   display: none;
+  font-size: 1.25rem;
 }
 
 
 nav ul li:first-child a{
 border-top: none;
 }
-
-
-  
-
 
 nav ul li:hover {
 background-color: #8AC8FF;
@@ -190,12 +190,30 @@ nav ul li .user-option:hover {
 }
 
 nav{
-/* background-color: #6DB7F7; */
 background-color: antiquewhite;
 }
 
+.statistics-modal h5{
+  display: flex;
+  justify-content: space-between;
+  width: 35%;
+  padding-bottom: 0px;
+}
+
+.statistics-modal h5 p {
+  margin-bottom: 0px;
+}
+
+
+
 .stats{
   font-size: 1.25rem;
+  border-radius: 0px;
+}
+
+.stats:hover,.stats:focus{
+  color: black;
+  text-decoration:none;
 }
 
 .logout{
@@ -216,11 +234,6 @@ background-color: antiquewhite;
   font-size: 1.75rem
 }
 
-/* header> :nth-child(2){
-  position: absolute;
-  right: 10px;
-  top: 5px
-} */
 
 .go-back{
   position: absolute;
@@ -254,23 +267,40 @@ h6{
 }
 
 div .question {
-  margin: 5px 0px 0px 0px;
+  margin-top: 5px;
   padding: 15px;
 }
 
+
 .submit {
-  padding-top: 5px;
-  padding-bottom: 15px;
+  padding: 10px 0px;
+  margin-top: 5px;
   text-align: center;
+  background-color: antiquewhite;
+}
+#submit-button{
+  border: none;
 }
 
-div.submissionError h5{
-  background-color: lightcoral;
-  font-weight: 450;
+#submit-button h4, .submission-options button h4{
+  margin: 0px;
+  font-weight:600;
 }
 
-.retake{
+div.submissionError .submission-alert{
+  margin-bottom: 0px;
+  margin-top: 5px;
+  font-size: larger;
+}
+
+.take-another-quiz #retake-button{
   margin-right: 20px;
+  padding-bottom: 0px;
+  font-weight:600;
+}
+
+.submission-options h4{
+  font-weight: 500;
 }
 
 .export Button{
@@ -281,7 +311,10 @@ div.submissionError h5{
   display: flex;
   flex-flow: row wrap;
   justify-content: center;
-  padding-bottom: 20px;
+  align-items: center;
+  padding: 15px 0px;
+  margin-top: 5px;
+  background-color: antiquewhite;
 }
 
 .no-quizzes-disclaimer{
@@ -302,13 +335,14 @@ h4, h5, h6{
   position: static;
   bottom: 0px;
   width: 100%;
+  /* height: 10vh; */
   background-color: #1A2E40;
   color: antiquewhite;
   border-radius: 0px;
 }
 
 
-.app-footer :first-child{
+.app-footer>:first-child{
   text-align: center;
   text-shadow: 0.5px 0.5px antiquewhite;
   margin-bottom: 0px;
@@ -338,11 +372,12 @@ h4, h5, h6{
   border-radius: 50%;
 }
 #fbla-links a{
-  min-width: 90px;
-  max-width: 150px;
-  width: 33.3%;
+  min-width: 30px;
+  max-width: 75px;
+  width: 20%;
   height: 100%;
   border-radius: 50%;
+  border: 1px solid pink;
 }
 
 @media only screen and (max-width: 1000px){
