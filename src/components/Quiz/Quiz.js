@@ -11,8 +11,6 @@ import Jumbotron from "react-bootstrap/Jumbotron";
 import Spinner from "react-bootstrap/Spinner"
 import Alert from "react-bootstrap/Alert";
 import Button from "react-bootstrap/Button";
-import Dropdown from "react-bootstrap/Dropdown";
-import Image from "react-bootstrap/Image"
 import {
     Link
   } from "react-router-dom";
@@ -532,7 +530,7 @@ class Quiz extends React.Component {
                 <MultChoice answerChoices = {['True', 'False']} disabled = 'true' selected = {this.state.trueFalseState}
                 answer = {this.truefalseData.Answer ? 0 : 1}/>
                 </div>
-                <div className = "submission-options">
+                <div id = "submission-options">
                 {/*Three submission options, clicking download report button
                 creates a pdf with the current quiz results, which are passed as a paramater*/}
                 <div className = "take-another-quiz">
@@ -544,7 +542,7 @@ class Quiz extends React.Component {
                 <h4>Download Results</h4></Button>
                 </div>
                 {/*Displays user's quiz score statistics in a popup*/}
-                <ViewStatistics itemFormat = "button" fetched={true} data={this.userData}/>
+                <div><ViewStatistics itemFormat = "button" fetched={true} data={this.userData}/></div>
                 </div>
             </div>
             )

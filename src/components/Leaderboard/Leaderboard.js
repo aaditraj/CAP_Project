@@ -1,9 +1,5 @@
 import React from "react";
 import Table from "react-bootstrap/Table";
-import firebase from "firebase/app";
-import Dropdown from "react-bootstrap/Dropdown";
-import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
 import Spinner from "react-bootstrap/Spinner"
 import Jumbotron from "react-bootstrap/Jumbotron"
 // import "./Leaderboard.css";

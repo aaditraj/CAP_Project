@@ -4,7 +4,7 @@ import "./Feedback.css"
 
 
 //React Bootstrap components
-import { Form, Col, Row}  from "react-bootstrap"
+import { Form, Col}  from "react-bootstrap"
 import Button from "react-bootstrap/Button"
 import Card from "react-bootstrap/Card"
 import Alert from "react-bootstrap/Alert"
@@ -175,6 +175,9 @@ class Feedback extends React.Component {
                     </Form.Row> 
                 ]
                 break;
+            default:
+                components = []
+ 
         }
         return(
             <div className = "feedback-page">

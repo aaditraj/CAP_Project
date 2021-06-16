@@ -17,13 +17,8 @@ import LoginPage from "./components/Login/Login"
 import Home from "./components/Home/Home"
 import Quiz from "./components/Quiz/Quiz.js"
 import Feedback from "./components/Feedback/Feedback.js"
-import GetData from "./components/Quiz/DataFetching/GetData"
-import showPastQuizzes from "./components/Past-Quizzes/Past-Quizzes.js"
 
 //styling components from React Bootstrap
-import Jumbotron from "react-bootstrap/Jumbotron";
-import Spinner from "react-bootstrap/Spinner"
-import Alert from "react-bootstrap/Alert";
 import Button from "react-bootstrap/Button";
 import Dropdown from "react-bootstrap/Dropdown";
 import Card from "react-bootstrap/Card";
@@ -31,17 +26,11 @@ import Image from "react-bootstrap/Image"
 
 import fblaLogo from "./assets/fbla-logo.png"
 import cafblaLogo from "./assets/cafbla-logo.png"
-//Question components (e.g. radio buttons, textboxes) for the questions
-import DropdownQuestion from "./components/Quiz/Dropdown/Dropdown.js"
-import FillInBlank from "./components/Quiz/FillTheBlank/FillTheBlank.js";
-import MultChoice from "./components/Quiz/MultChoice/MultChoice.js";
-// import TrueFalse from "./components/Quiz/TrueFalse/TrueFalse.js"
+
 
 //features for the results page: generating report, and viewing statistics
-import generatePDF from "./components/Quiz/Report/GeneratePDF.js"
 import ViewStatistics from "./components/Quiz/Report/Statistics"
 import Leaderboard from "./components/Leaderboard/Leaderboard"
-// import { Card } from "react-bootstrap";
 
 //main class that is being loaded into the HTML
 class AppTest extends React.Component {
@@ -52,7 +41,8 @@ class AppTest extends React.Component {
       create_error: false,
       create_error_message: null,
       userData: null,
-      allDataFetched: false
+      allDataFetched: false,
+      userDataFetched:false
     }
 
   }
@@ -63,12 +53,12 @@ class AppTest extends React.Component {
     firebase.auth().onAuthStateChanged(async firebaseUser => {
       if (firebaseUser) {
         this.getUserData()
-        .then(() => {
-            console.log(this.state.userData)
-            this.setState({
-                logged_in: true,
-            })
+        // .then(() => {
+        console.log(this.state.userData)
+        this.setState({
+            logged_in: true,
         })
+        // })
        
       } else {
         this.setState({
@@ -136,7 +126,8 @@ class AppTest extends React.Component {
   handleLogout = () => {
     const auth = firebase.auth();
     auth.signOut();
-    window.location.reload(true)
+    this.setState({userData:null, userDataFetched:false})
+    // window.location.reload(true)
   }
 
   //creating new account & writing new user info into database
@@ -170,15 +161,16 @@ class AppTest extends React.Component {
                 Highest_Score: null,
                 Lowest_Score: null,
                 Average: null
-            }).then(
-                this.getUserData().then(() => {
+            }).then( () => {
+                this.getUserData()
+                // .then(() => {
                     this.setState({
                         logged_in: true,
                         written: true
                     })
-                })
+                // })
                 // this.setState({written: true})
-            )
+            })
         }
       }
     }) 

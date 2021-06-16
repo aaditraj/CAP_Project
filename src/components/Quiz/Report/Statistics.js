@@ -1,7 +1,6 @@
 import React from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import Dropdown from "react-bootstrap/Dropdown"
 
 //displays statistics from App file when user clicks 'View Statistics'
 //Statistics include average, highest, and lowest scores across all user's attempts
