@@ -46,33 +46,33 @@ body{
   display: flex;
   justify-content: center;
   align-items: center;
-  background-image: url("./assets/svgs/undraw_Terms_re_6ak4.svg");
+  background-image: url("./assets/images/terms.jpg");
   background-size: cover;
   background-position: center;
 } 
 
 #Know {
-  background-image: url("./assets/svgs/undraw_visual_data_re_mxxo.svg");
+  background-image: url("./assets/images/numbers.png");
   /* background-size: cover */
 }
 
 #Dates{
-  background-image: url("./assets/svgs/undraw_in_no_time_6igu.svg");
+  background-image: url("./assets/images/date-and-time.jpg");
   /* background-size: cover */
 }
 
 #People{
-  background-image: url("./assets/svgs/undraw_Co_workers_re_1i6i.svg");
+  background-image: url("./assets/images/people.jpg");
   /* background-size: contain; */
 }
 
 #Places{
-  background-image: url("./assets/svgs/undraw_Around_the_world_re_n353.svg");
+  background-image: url("./assets/images/places.jpg");
   /* background-size: cover; */
 }
 
 #Potpourri{
-  background-image: url("./assets/svgs/undraw_selected_options_42hx.svg");
+  background-image: url("./assets/images/potpourri.jpg");
   /* background-size: contain; */
   background-position-y: 0rem;
   background-position-x: 1rem;

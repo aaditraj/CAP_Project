@@ -29,9 +29,8 @@ const Home = () => {
                 <div>
                     <Jumbotron className = "jumbo">
                         <h1>FBLA Expert</h1>
-                        <h4>Welcome, {firebase.auth().currentUser.displayName.split(" ")[0]}!
-                        &ensp;&ensp;
-                        Choose a Quiz Topic Below.</h4>
+                        {/* <h3>Welcome, {firebase.auth().currentUser.displayName.split(" ")[0]}!</h3> */}
+                        <h4>Choose a Quiz Topic Below!</h4>
                     </Jumbotron>
                     <div id="Choose-Topics">
 

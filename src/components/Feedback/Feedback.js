@@ -9,20 +9,20 @@ import Button from "react-bootstrap/Button"
 import Card from "react-bootstrap/Card"
 import Alert from "react-bootstrap/Alert"
 import Jumbotron from "react-bootstrap/Jumbotron"
-
+import {Redirect} from "react-router-dom"
 class Feedback extends React.Component {
     constructor(props){
         super(props)
         this.state = {
-            topic: null,
-            question_type: null,
-            question: null,
-            answer: null,
-            choices: [null, null, null, null],
-            question_submission_state: null,
+            topic: "",
+            question_type: "",
+            question: "",
+            answer: "",
+            choices: ["", "", "", ""],
+            question_submission_state: "",
             validated: false,
-            feedback: null,
-            feedback_submission_state: null
+            feedback: "",
+            feedback_submission_state: ""
         }
     }
 
@@ -117,8 +117,17 @@ class Feedback extends React.Component {
             }
             this.setState({
                 question_submission_state: <Alert variant="success" dismissible
-                onClose={()=>{this.setState({question_submission_state:null})}}>Question sent successfully!</Alert>
-            })
+                onClose={()=>{this.setState({question_submission_state:null})}}>Question sent successfully!</Alert>,
+                topic: " ",
+                question_type: " ",
+                question: " ",
+                answer: " ",
+                choices: [" ", " ", " ", " "],
+                validated: false,
+                feedback: " ",
+                feedback_submission_state: " "
+        })
+            
         }
         this.setState({validated: true})
         e.preventDefault()
@@ -133,18 +142,21 @@ class Feedback extends React.Component {
                     <Form.Row>
                         <Form.Group as={Col} controlId="formGridChoice1">
                         <Form.Label>Choice 1</Form.Label>
-                        <Form.Control required onChange={(e) => {this.addChoice(e, 0)}}/>
+                        <Form.Control required value={this.state.choices[0]} 
+                        onChange={(e) => {this.addChoice(e, 0)}}/>
                         <Form.Control.Feedback type="invalid">Please provide 3 choices</Form.Control.Feedback>
                         </Form.Group>
 
                         <Form.Group as={Col} controlId="formGridChoice2">
                         <Form.Label>Choice 2</Form.Label>
-                        <Form.Control required onChange={(e) => {this.addChoice(e, 1)}}/>
+                        <Form.Control required value={this.state.choices[1]} 
+                        onChange={(e) => {this.addChoice(e, 1)}}/>
                         </Form.Group>
                     
                         <Form.Group as={Col} controlId="formGridChoice3">
                         <Form.Label>Choice3</Form.Label>
-                        <Form.Control required onChange={(e) => {this.addChoice(e, 2)}}/>
+                        <Form.Control required value={this.state.choices[2]} 
+                        onChange={(e) => {this.addChoice(e, 2)}}/>
                         </Form.Group>
                     </Form.Row> 
                 ]
@@ -154,23 +166,27 @@ class Feedback extends React.Component {
                     <Form.Row>
                         <Form.Group as={Col} controlId="formGridChoice1">
                         <Form.Label>Choice 1</Form.Label>
-                        <Form.Control required onChange={(e) => {this.addChoice(e, 0)}}/>
+                        <Form.Control required value={this.state.choices[0]} 
+                        onChange={(e) => {this.addChoice(e, 0)}}/>
                         <Form.Control.Feedback type="invalid">Please provide 4 choices</Form.Control.Feedback>
                         </Form.Group>
 
                         <Form.Group as={Col} controlId="formGridChoice2">
                         <Form.Label>Choice 2</Form.Label>
-                        <Form.Control required onChange={(e) => {this.addChoice(e, 1)}}/>
+                        <Form.Control required value={this.state.choices[1]} 
+                        onChange={(e) => {this.addChoice(e, 1)}}/>
                         </Form.Group>
                     
                         <Form.Group as={Col} controlId="formGridChoice3">
                         <Form.Label>Choice 3</Form.Label>
-                        <Form.Control required onChange={(e) => {this.addChoice(e, 2)}}/>
+                        <Form.Control required value={this.state.choices[2]} 
+                        onChange={(e) => {this.addChoice(e, 2)}}/>
                         </Form.Group>
 
                         <Form.Group as={Col} controlId="formGridChoice4">
                         <Form.Label>Choice 4</Form.Label>
-                        <Form.Control required onChange={(e) => {this.addChoice(e, 3)}}/>
+                        <Form.Control value={this.state.choices[3]} 
+                        required onChange={(e) => {this.addChoice(e, 3)}}/>
                         </Form.Group>
                     </Form.Row> 
                 ]
@@ -191,7 +207,8 @@ class Feedback extends React.Component {
                     <Form noValidate validated={this.state.validated} onSubmit={this.sendQuestion}>
                         <Form.Group>
                             <Form.Label>Topic</Form.Label>
-                            <Form.Control required as="select" onChange={ (e) => {this.handleTopicSelect(e)} }>
+                            <Form.Control required as="select" value={this.state.topic} 
+                            onChange={ (e) => {this.handleTopicSelect(e)} }>
                                 <option value="">Select</option>
                                 <option value="Know Your Numbers">Know Your Numbers</option>
                                 <option value="Dates and Times">Dates and Times</option>
@@ -205,7 +222,8 @@ class Feedback extends React.Component {
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>Question Type</Form.Label>
-                            <Form.Control required as="select" onChange={ (e) => {this.handleTypeSelect(e)} }>
+                            <Form.Control required as="select" value={this.state.question_type} 
+                            onChange={ (e) => {this.handleTypeSelect(e)} }>
                                 <option value="">Select</option>
                                 <option value="DropDown">Dropdown</option>
                                 <option value="FillInTheBlank">Fill in the Blank</option>
@@ -216,17 +234,19 @@ class Feedback extends React.Component {
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>Question</Form.Label>
-                            <Form.Control required placeholder="Enter question" onChange={ (e) => {this.handleQuestionChange(e)}}/>
+                            <Form.Control required value={this.state.question} 
+                            placeholder="Enter question" onChange={ (e) => {this.handleQuestionChange(e)}}/>
                             <Form.Control.Feedback type="invalid">Please provide a question.</Form.Control.Feedback>
                         </Form.Group>
                         {components}
                         <Form.Group>
                             <Form.Label>Answer</Form.Label>
-                            <Form.Control required placeholder="Enter answer" onChange={ (e) => {this.handleAnswerChange(e)} }/>
+                            <Form.Control required value={this.state.answer} 
+                            placeholder="Enter answer" onChange={ (e) => {this.handleAnswerChange(e)} }/>
                             <Form.Control.Feedback type="invalid">Please provide an answer.</Form.Control.Feedback>
                         </Form.Group>
                         {this.state.question_submission_state}
-                        <Button className = "send-question" variant="success"
+                        <Button className = "send-question"
                         type="submit">Send!</Button>
                     </Form>
                 </Card>
@@ -235,12 +255,12 @@ class Feedback extends React.Component {
                     <Form noValidate validated={this.state.message_validated} onSubmit={this.sendFeedback}>
                         <Form.Group>
                             <Form.Label>Message</Form.Label>
-                            <Form.Control as="textarea" rows={3}
+                            <Form.Control as="textarea" value={this.state.feedback}  rows={3}
                             required onChange={ (e) => {this.handleFeedbackChange(e)} }/>
                             <Form.Control.Feedback type="invalid">Please enter a message.</Form.Control.Feedback>
                         </Form.Group>
                         {this.state.feedback_submission_state}
-                        <Button className = "send-feedback" variant="success"
+                        <Button className = "send-feedback"
                         type="submit">Send!</Button>
                     </Form>
                 </Card>
