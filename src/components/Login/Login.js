@@ -10,6 +10,7 @@ import Jumbotron from "react-bootstrap/Jumbotron"
 
 import fblaLogo from "/Users/araj/Desktop/Coding/cap/cap_project/src/assets/fbla-logo.png"
 import cafblaLogo from "/Users/araj/Desktop/Coding/cap/cap_project/src/assets/cafbla-logo.png"
+import hhsfblaLogo from "/Users/araj/Desktop/Coding/cap/cap_project/src/assets/hhsfbla-logo.jpg"
 
 //Styling for login and account creation page
 import "./Login.css"
@@ -225,7 +226,7 @@ class LoginPage extends React.Component {
                                 <Image src={cafblaLogo}/>
                             </a>
                             <a target="_blank" href="https://www.hhsfbla.com">
-                                <Image src="https://pbs.twimg.com/profile_images/634932700990668800/J4KrGcmG_400x400.jpg"/>
+                                <Image src={hhsfblaLogo}/>
                             </a>
                             </div>
                             </Card.Body>
@@ -349,7 +350,7 @@ class LoginPage extends React.Component {
                                 <Image src={cafblaLogo}/>
                             </a>
                             <a target="_blank" href="https://www.hhsfbla.com">
-                                <Image src="https://pbs.twimg.com/profile_images/634932700990668800/J4KrGcmG_400x400.jpg"/>
+                                <Image src={hhsfblaLogo}/>
                             </a>
                             </div>
                             </Card.Body>

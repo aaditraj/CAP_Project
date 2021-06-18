@@ -21,11 +21,13 @@ import Feedback from "./components/Feedback/Feedback.js"
 //styling components from React Bootstrap
 import Button from "react-bootstrap/Button";
 import Dropdown from "react-bootstrap/Dropdown";
+import Alert from "react-bootstrap/Alert"
 import Card from "react-bootstrap/Card";
 import Image from "react-bootstrap/Image"
 
 import fblaLogo from "./assets/fbla-logo.png"
 import cafblaLogo from "./assets/cafbla-logo.png"
+import hhsfblaLogo from "./assets/hhsfbla-logo.jpg"
 
 
 //features for the results page: generating report, and viewing statistics
@@ -265,6 +267,7 @@ class AppTest extends React.Component {
                             <Route path="/feedback">
                                 <Feedback/>
                             </Route>
+
                             {components}
                         </Switch>
 
