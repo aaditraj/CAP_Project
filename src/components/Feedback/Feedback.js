@@ -80,8 +80,8 @@ class Feedback extends React.Component {
     }
 
     checkQuestionValidity = () => {
-        if (!this.isFieldEmpty(this.state.topic) && !this.isFieldEmpty(this.state.question_type) &&
-        !this.isFieldEmpty(this.state.answer)) {
+        if (!this.isFieldEmpty(this.state.topic) && !this.isFieldEmpty(this.state.question_type)
+        && !this.isFieldEmpty(this.state.question) && !this.isFieldEmpty(this.state.answer)) {
             switch (this.state.question_type){
                 case ("Multiple Choice"):
                     if (this.isArrayEmpty(this.state.choices)){

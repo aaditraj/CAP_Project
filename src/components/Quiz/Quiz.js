@@ -185,7 +185,7 @@ class Quiz extends React.Component {
                 trueFalseCorrect: (Boolean(this.state.trueFalseState) !== await this.truefalseData.Answer ? 1: 0),
                 }, async() => {
                 this.setState({
-                    fillBlankCorrect: (this.state.fillBlankText.toLowerCase() === await this.fillBlankData.Answer ? 1 : 0),
+                    fillBlankCorrect: (this.state.fillBlankText.toLowerCase().trim() === await this.fillBlankData.Answer.toLowerCase().trim() ? 1 : 0),
                     submissionState: <Alert className="submission-alert"
                     variant="info" >Processing your submission...</Alert>
                 }, async () => {
@@ -551,7 +551,8 @@ class Quiz extends React.Component {
         return (
             <div className = "loading-screen">
             <h1>Loading...</h1>
-            <Spinner animation="border" variant="light" />
+            {/* <Spinner animation="border" variant="light" /> */}
+            <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
             </div>
         )
         }

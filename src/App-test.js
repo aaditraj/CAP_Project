@@ -285,7 +285,7 @@ class AppTest extends React.Component {
                       <Image src={cafblaLogo}/>
                     </a>
                     <a target="_blank" href="https://www.hhsfbla.com">
-                      <Image src="https://pbs.twimg.com/profile_images/634932700990668800/J4KrGcmG_400x400.jpg"/>
+                      <Image src={hhsfblaLogo}/>
                     </a>
                     </div>
                   </Card.Body>
