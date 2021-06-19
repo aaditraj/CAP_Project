@@ -56,7 +56,6 @@ class AppTest extends React.Component {
       if (firebaseUser) {
         this.getUserData()
         // .then(() => {
-        console.log(this.state.userData)
         this.setState({
             logged_in: true,
         })
@@ -128,8 +127,8 @@ class AppTest extends React.Component {
   handleLogout = () => {
     const auth = firebase.auth();
     auth.signOut();
-    this.setState({userData:null, userDataFetched:false})
-    // window.location.reload(true)
+    // this.setState({userData:null, userDataFetched:false})
+    window.location.reload(true)
   }
 
   //creating new account & writing new user info into database
