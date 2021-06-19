@@ -42,6 +42,7 @@ class AppTest extends React.Component {
       login_error: false,
       create_error: false,
       create_error_message: null,
+      name: null,
       userData: null,
       allDataFetched: false,
       userDataFetched:false
@@ -55,11 +56,10 @@ class AppTest extends React.Component {
     firebase.auth().onAuthStateChanged(async firebaseUser => {
       if (firebaseUser) {
         this.getUserData()
-        // .then(() => {
+
         this.setState({
-            logged_in: true,
+          logged_in: true
         })
-        // })
        
       } else {
         this.setState({
@@ -118,6 +118,7 @@ class AppTest extends React.Component {
       if (firebaseUser){
         this.getUserData()
         this.setState({
+            name: firebase.auth().currentUser.displayName,
             logged_in: true,
         })
       }
@@ -146,12 +147,10 @@ class AppTest extends React.Component {
     firebase.auth().onAuthStateChanged((firebaseUser) => {
       if (firebaseUser) {
         this.setState({
-        //   logged_in : true,
+          name: firstName + " " + lastName,
           create_error: false
         })
-        firebaseUser.updateProfile({
-          displayName: firstName + " " + lastName
-        })
+       
         if (!(this.state.written) && !(this.state.create_error)){
             this.db = firebase.apps[0].firestore()
             this.writeUserRef = this.db.collection("UserData").doc()
@@ -164,13 +163,13 @@ class AppTest extends React.Component {
                 Average: null
             }).then( () => {
                 this.getUserData()
-                // .then(() => {
-                    this.setState({
-                        logged_in: true,
-                        written: true
-                    })
-                // })
-                // this.setState({written: true})
+                this.setState({
+                  logged_in: true,
+                  written: true
+                })
+                firebaseUser.updateProfile({
+                  displayName: firstName + " " + lastName
+                })
             })
         }
       }
@@ -225,7 +224,8 @@ class AppTest extends React.Component {
                                 <li><Button onClick={this.handleLogout} className="user-option hidden-option" variant="link">Logout</Button></li>
                                 <Dropdown className = "logout">
                                     <Dropdown.Toggle variant="dark">
-                                        {firebase.auth().currentUser.displayName}
+                                        {/* {firebase.auth().currentUser.displayName} */}
+                                        {this.state.name === null ? firebase.auth().currentUser.displayName : this.state.name}
                                     </Dropdown.Toggle>
 
                                     <Dropdown.Menu>

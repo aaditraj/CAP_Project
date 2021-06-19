@@ -25,7 +25,7 @@ class ViewStatistics extends React.Component {
         <h4>Statistics</h4></Button>
       }
       if(this.props.fetched){
-        if (this.props.attempts === 0){
+        if (this.props.data.Scores.length === 0){
           components.push(<h4 className="no-quizzes-disclaimer">You have not attempted any quizzes so far.
           Please take a quiz.</h4>)
         } else {

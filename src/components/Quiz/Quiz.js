@@ -550,7 +550,7 @@ class Quiz extends React.Component {
         } else {
         return (
             <div className = "loading-screen">
-            <h1>Loading...</h1>
+            <h1>Loading Quiz...</h1>
             {/* <Spinner animation="border" variant="light" /> */}
             <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
             </div>

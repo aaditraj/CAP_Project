@@ -61,6 +61,11 @@ class Leaderboard extends React.Component {
         if(this.props.fetched){ this.updateScores()}
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        if (prevProps.fetched !== this.props.fetched){
+            this.updateScores()
+        }
+    }
 
     // shouldComponentUpdate(nextProps) {
     //     if (nextProps.data !== this.props.data) {
