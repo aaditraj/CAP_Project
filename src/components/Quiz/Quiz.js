@@ -206,6 +206,7 @@ class Quiz extends React.Component {
                         this.userData = doc.data();
                         })
                         this.props.onUserDataChange(this.userData)
+                        window.scrollTo(0, 0)
                         this.setState({
                         submitted: true
                         })
@@ -282,6 +283,7 @@ class Quiz extends React.Component {
     var data = await GetData(this.state)
     var state = data[0];
     var questionData = data[1]
+    window.scrollTo(0, 0)
     this.setState({
       multChoices1: state.multChoices1,
       multQuestion1: state.multQuestion1,

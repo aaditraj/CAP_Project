@@ -117,6 +117,8 @@ class AppTest extends React.Component {
     firebase.auth().onAuthStateChanged((firebaseUser) => {
       if (firebaseUser){
         this.getUserData()
+        window.scrollTo(0, 0)
+        
         this.setState({
             name: firebase.auth().currentUser.displayName,
             logged_in: true,
@@ -163,6 +165,7 @@ class AppTest extends React.Component {
                 Average: null
             }).then( () => {
                 this.getUserData()
+                window.scrollTo(0, 0)
                 this.setState({
                   logged_in: true,
                   written: true

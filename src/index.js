@@ -19,7 +19,7 @@ firebase.initializeApp({
 
 ReactDOM.render(
   <React.StrictMode>
-    <AppTest />
+      <AppTest />
   </React.StrictMode>,
   document.getElementById('root')
 );

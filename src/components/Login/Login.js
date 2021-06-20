@@ -209,7 +209,11 @@ class LoginPage extends React.Component {
                                 this.handleCreate(this.state.firstName, this.state.lastName, this.state.new_email, 
                                 this.state.new_password, this.state.retype_password)}
                                 className = "done">Done</Button>
-                                <Button onClick = {() => this.setState({create: false})}>Back</Button>
+                                <Button onClick = {
+                                    () => {
+                                        window.scrollTo(0, 0)
+                                        this.setState({create: false})
+                                    }}>Back</Button>
                                 </div>
                             </Form>
                         </Card>
@@ -325,9 +329,12 @@ class LoginPage extends React.Component {
                                 <Button className = "Login" onClick = {() => 
                                 this.handleLogin(this.state.login_email, this.state.login_pw)}>Login</Button>
                                 <Button className = "sign-up" 
-                                variant = "link" onClick = {() => this.setState({
+                                variant = "link" onClick = {
+                                () =>{
+                                window.scrollTo(0, 0)
+                                this.setState({
                                     create: true
-                                })}>Sign Up</Button>
+                                })}}>Sign Up</Button>
                             </Form>
                         </Card>
                         {/* <div className = "About-FBLA">

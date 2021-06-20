@@ -6,7 +6,8 @@
     flex-flow: column nowrap;
     justify-content: center;
     align-items: center;
-    background-image: url("https://hhsfbla.com/static/media/cover.7a909140.jpg");
+    /* background-image: url("https://hhsfbla.com/static/media/cover.7a909140.jpg"); */
+    background-image: url("../../assets/hhsfbla-cover1.jpg");
     background-size: cover;
 }
 
@@ -25,12 +26,12 @@
     
 } */
 
-@media only screen and (max-width: 1000px){
+/* @media only screen and (max-width: 1000px){
     .home-screen div.home-screen-content{
         background-position-x: -6rem;
     }
     
-}
+} */
 
 
 .login-wrapper{
