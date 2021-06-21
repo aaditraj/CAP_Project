@@ -8,7 +8,6 @@ import GetData from "./DataFetching/GetData"
 
 //styling components from React Bootstrap
 import Jumbotron from "react-bootstrap/Jumbotron";
-import Spinner from "react-bootstrap/Spinner"
 import Alert from "react-bootstrap/Alert";
 import Button from "react-bootstrap/Button";
 import {

@@ -21,7 +21,6 @@ import Feedback from "./components/Feedback/Feedback.js"
 //styling components from React Bootstrap
 import Button from "react-bootstrap/Button";
 import Dropdown from "react-bootstrap/Dropdown";
-import Alert from "react-bootstrap/Alert"
 import Card from "react-bootstrap/Card";
 import Image from "react-bootstrap/Image"
 

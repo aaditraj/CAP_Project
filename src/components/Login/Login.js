@@ -159,7 +159,7 @@ class LoginPage extends React.Component {
                     <div className = "home-screen-content">
                         {/* <Card bg = "light" text = "dark"> */}
                         {/* <Card.Header className = "card-header"><h2>Login</h2></Card.Header> */}
-                        <Card className = "create-account-wrapper" bg="light">
+                        <Card className = "login-card create-account-wrapper" bg="light">
                             <h2>Create an Account</h2>
                             <Form className = "form-login-wrapper">
                                  <Form.Group>
@@ -308,7 +308,7 @@ class LoginPage extends React.Component {
                         <h4>Test Your Knowledge About FBLA!</h4>
                     </Jumbotron>
                     <div className = "home-screen-content">
-                        <Card className = "login-wrapper" bg="light">
+                        <Card className = "login-card login-wrapper" bg="light">
                             <h2>Login</h2>
                             <Form>
                                 <Form.Group>

@@ -9,6 +9,7 @@
     /* background-image: url("https://hhsfbla.com/static/media/cover.7a909140.jpg"); */
     background-image: url("../../assets/hhsfbla-cover1.jpg");
     background-size: cover;
+    background-position-x: -1rem;
 }
 
 
@@ -35,27 +36,25 @@
 
 
 .login-wrapper{
-    display: flex;
-    flex-flow: column nowrap;
     justify-content: space-around;
-    align-items: center;
-    padding: 20px;
-    border-radius: 10px;
     margin-top: 175px;
     margin-bottom: 215px;
     height: 300px;
-    /* border: 1px solid black; */
 }
 
-
-
-.create-account-wrapper{
+.login-card{
     display: flex;
     flex-flow: column nowrap;
-    justify-content: center;
     align-items: center;
     padding: 20px;
     border-radius: 10px;
+    opacity: 0.9;
+    border: 1px solid black;
+}
+
+
+.create-account-wrapper{
+    justify-content: center;
     margin-top: 50px;
     margin-bottom: 40px;    
 }
@@ -75,6 +74,8 @@
 
 .login-textbox, .create-textbox{
     width: 350px;
+    border: 1px solid black;
+    font-weight: 600;
 }
 
 

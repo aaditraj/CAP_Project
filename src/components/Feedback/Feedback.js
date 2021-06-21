@@ -9,7 +9,6 @@ import Button from "react-bootstrap/Button"
 import Card from "react-bootstrap/Card"
 import Alert from "react-bootstrap/Alert"
 import Jumbotron from "react-bootstrap/Jumbotron"
-import {Link} from "react-router-dom"
 class Feedback extends React.Component {
     constructor(props){
         super(props)

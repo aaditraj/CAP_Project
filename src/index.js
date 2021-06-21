@@ -4,16 +4,27 @@ import './index.css';
 // import App from './App';
 import AppTest from './App-test.js';
 import firebase from "firebase/app";
+import configData from "./config.json"
 
+
+// firebase.initializeApp({
+//   apiKey: "AIzaSyD_dxaZ75fz-C96Lq1MoziqerFGTJbQC6k",
+//   authDomain: "cap-project-86c79.firebaseapp.com",
+//   projectId: "cap-project-86c79",
+//   storageBucket: "cap-project-86c79.appspot.com",
+//   messagingSenderId: "308193142608",
+//   appId: "1:308193142608:web:f35982c86c92ea8296ae55",
+//   measurementId: "G-1RW0FRKMTR"
+// })
 
 firebase.initializeApp({
-  apiKey: "AIzaSyD_dxaZ75fz-C96Lq1MoziqerFGTJbQC6k",
-  authDomain: "cap-project-86c79.firebaseapp.com",
-  projectId: "cap-project-86c79",
-  storageBucket: "cap-project-86c79.appspot.com",
-  messagingSenderId: "308193142608",
-  appId: "1:308193142608:web:f35982c86c92ea8296ae55",
-  measurementId: "G-1RW0FRKMTR"
+  apiKey: configData.apiKey,
+  authDomain: configData.authDomain,
+  projectId: configData.projectId,
+  storageBucket: configData.storageBucket,
+  messagingSenderId: configData.messagingSenderId,
+  appId: configData.appId,
+  measurementId: configData.measurementId
 })
 
 
