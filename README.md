@@ -10,10 +10,7 @@ This application, ‘FBLA Expert’, can be installed and run on Mac or Windows.
 
 ### Login Instructions: ###
 
-After launching the application, you will be directed to a login page. Create a new account to log in, or use the sample account below.
-
-Email: sampleuser@example.com  
-Password: fblaEXPERT!123 
+After launching the application, you will be directed to a login page. Create a new account to log in.
 
 ### Description: ###
 
