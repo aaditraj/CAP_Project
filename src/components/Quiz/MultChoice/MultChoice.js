@@ -59,39 +59,48 @@ const MultChoice = (props) => {
                 )
             }
         } else {
-            if (props.question === '1'){
-                components.push(
-                    <Form.Check 
-                    type="radio"
-                    key={`formHorizontalRadios` + (i+1)}
-                    label={props.answerChoices[i]}
-                    name="formHorizontalRadios"
-                    onChange = {(e) => props.onSelect(i, 1, e)}
-                    />
-                )
-            }
-            else if (props.question === '2') {
-                components.push(
-                    <Form.Check 
-                    type="radio"
-                    key={`formHorizontalRadios` + (i+1)}
-                    label={props.answerChoices[i]}
-                    name="formHorizontalRadios"
-                    onChange = {(e) => props.onSelect(i, 2, e)}
-                    />
-                )
-            }
-            else {
-                components.push(
-                    <Form.Check 
-                    type="radio"
-                    key={`formHorizontalRadios` + (i+1)}
-                    label={props.answerChoices[i]}
-                    name="formHorizontalRadios"
-                    onChange = {(e) => props.onSelect(i, 3, e)}
-                    />
-                )
-            }
+            components.push(
+                <Form.Check 
+                type="radio"
+                key={`formHorizontalRadios` + (i+1)}
+                label={props.answerChoices[i]}
+                name="formHorizontalRadios"
+                onChange = {(e) => props.onSelect(i, props.question, e)}
+                />
+            )
+            // if (props.question === '1'){
+            //     components.push(
+            //         <Form.Check 
+            //         type="radio"
+            //         key={`formHorizontalRadios` + (i+1)}
+            //         label={props.answerChoices[i]}
+            //         name="formHorizontalRadios"
+            //         onChange = {(e) => props.onSelect(i, 1, e)}
+            //         />
+            //     )
+            // }
+            // else if (props.question === '2') {
+            //     components.push(
+            //         <Form.Check 
+            //         type="radio"
+            //         key={`formHorizontalRadios` + (i+1)}
+            //         label={props.answerChoices[i]}
+            //         name="formHorizontalRadios"
+            //         onChange = {(e) => props.onSelect(i, 2, e)}
+            //         />
+            //     )
+            // }
+            // else {
+            //     components.push(
+            //         <Form.Check 
+            //         type="radio"
+            //         key={`formHorizontalRadios` + (i+1)}
+            //         label={props.answerChoices[i]}
+            //         name="formHorizontalRadios"
+            //         onChange = {(e) => props.onSelect(i, 3, e)}
+            //         />
+            //     )
+            // }
             
         }
     }

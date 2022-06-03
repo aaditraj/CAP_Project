@@ -19,6 +19,7 @@ class Feedback extends React.Component {
             answer: "",
             choices: ["", "", "", ""],
             question_submission_state: "",
+            answerFeedback: null,
             feedback: "",
             feedback_submission_state: "",
             question_disabled: true,
@@ -69,29 +70,42 @@ class Feedback extends React.Component {
         return (field === null || field.replace(/\s/g, '').length === 0)
     }
 
-    isArrayEmpty = (field) => {
+    isArrayInvalid = (field) => {
+        var valuesSoFar = []
         for(let i = 0; i < field.length; i++){
-            if (this.isFieldEmpty(field[i])){
+            if (this.isFieldEmpty(field[i]) || valuesSoFar.includes(field[i])){
                 return true
             }
+            valuesSoFar.push(field[i])
         }
         return false
     }
 
     checkQuestionValidity = () => {
+        this.setState({question_disabled: true})
         if (!this.isFieldEmpty(this.state.topic) && !this.isFieldEmpty(this.state.question_type)
         && !this.isFieldEmpty(this.state.question) && !this.isFieldEmpty(this.state.answer)) {
             switch (this.state.question_type){
                 case ("Multiple Choice"):
-                    if (this.isArrayEmpty(this.state.choices)){
+                    if (this.isArrayInvalid(this.state.choices)){
                         this.setState({question_disabled: true})
+                    } else if (!this.state.choices.includes(this.state.answer)) {
+                        this.setState({
+                            question_disabled: true,
+                            answerFeedback: "Answer must be included in provided choices"
+                        })
                     } else {
                         this.setState({question_disabled: false})
                     }
                     break;
                 case ("DropDown"):
-                    if (this.isArrayEmpty(this.state.choices.slice(0, 3))){
+                    if (this.isArrayInvalid(this.state.choices.slice(0, 3))){
                         this.setState({question_disabled: true})
+                    } else if (!this.state.choices.includes(this.state.answer)){
+                        this.setState({
+                            question_disabled: true,
+                            answerFeedback: null
+                        })
                     } else {
                         this.setState({question_disabled: false})
                     }
@@ -143,13 +157,14 @@ class Feedback extends React.Component {
             console.log("sending question!")
             var db = firebase.apps[0].firestore()
             var choices = this.state.choices
-            if (choices[3] === null){
+            if (choices[3] === ""){
                 db.collection("Feedback").doc("Suggestions").collection("Questions").add({
                     Topic: this.state.topic,
                     Type: this.state.question_type,
                     Question: this.state.question,
                     Choices: this.state.choices.slice(0, 3),
-                    Answer: this.state.answer
+                    Answer: this.state.choices.slice(0, 3).findIndex(choice => choice === this.state.answer),
+                    Approved: false
                 })
             } else {
                 db.collection("Feedback").doc("Suggestions").collection("Questions").add({
@@ -157,7 +172,8 @@ class Feedback extends React.Component {
                     Type: this.state.question_type,
                     Question: this.state.question,
                     Choices: this.state.choices,
-                    Answer: this.state.answer
+                    Answer: this.state.choices.findIndex(choice => choice === this.state.answer),
+                    Approved: false
                 })
             }
             this.setState({
@@ -291,7 +307,7 @@ class Feedback extends React.Component {
                             <Form.Control value={this.state.answer}
                             placeholder="Enter answer"
                             onChange={ (e) => {this.handleAnswerChange(e)} }/>
-                            {/* <Form.Control.Feedback type="invalid">Please provide an answer.</Form.Control.Feedback> */}
+                            <h6>{this.state.answerFeedback}</h6>
                         </Form.Group>
                         {this.state.question_submission_state}
                         <Button disabled={this.state.question_disabled} className = "send-question"
