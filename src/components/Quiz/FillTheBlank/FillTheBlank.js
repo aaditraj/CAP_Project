@@ -11,7 +11,7 @@ const FillInBlank  = (props) => {
     if (props.disabled === 'false'){
         components.push(
             <Form.Group className = "formgroup" controlId = "formBasicInput" key = "fill-blank-question">
-                <Form.Control  onChange = {props.onChange} className = 'textbox' placeholder = "Type your answer here..."/> 
+                <Form.Control  onChange = {(e) => {props.onChange(props.question, e)}} className = 'textbox' placeholder = "Type your answer here..."/> 
             </Form.Group>
         )  
     } else{

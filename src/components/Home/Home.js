@@ -18,10 +18,7 @@ class Home extends React.Component {
             var path = "/" + topics[index]
             components.push(
                 <div className="topic-container">
-                    {/* <Image src="https://logodix.com/logo/1610537.png" alt={topics[index]} className="topic-image"/> */}
                     <div className="topic-image" id={topics[index].split(" ")[0]}>
-                    {/* <Button className="middle" onClick = {() => this.handleTopicSelect(topics[index])}>{topics[index]}</Button> */}
-                    {/* <Link className="middle" to={path}>{topics[index]}</Link> */}
                     <Button className="middle" as={Link} to={path}>{topics[index]}</Button>
                     </div>
                 </div>
@@ -31,7 +28,6 @@ class Home extends React.Component {
             <div>
                 <Jumbotron className = "jumbo">
                     <h1>FBLA Expert</h1>
-                    {/* <h3>Welcome, {firebase.auth().currentUser.displayName.split(" ")[0]}!</h3> */}
                     <h4>Choose a Quiz Topic Below!</h4>
                 </Jumbotron>
                 <div id="Choose-Topics">

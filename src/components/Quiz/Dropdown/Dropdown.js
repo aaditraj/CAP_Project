@@ -9,82 +9,76 @@ import checkmark from "../../../assets/check.svg";
 import InputGroup from "react-bootstrap/InputGroup"
 
 //Displays dropdown question for quiz page and textbox results display
-class DropdownQuestion extends React.Component {  
-    render() {
-        let components = [];
-        
-        if (this.props.disabled === 'false'){
-            for (let i = 0; i < 3; i++) {
-                components.push(
-                    <Dropdown.Item eventKey={this.props.answerChoices[i]}
-                    onSelect = {(e) => this.props.onSelect(i, e)}
-                    key = {'dropdownItem' + (i+1)}>{this.props.answerChoices[i]}
-                    </Dropdown.Item>
-                )
-            }
-            return(
-                <Dropdown id="dropdown-button" as={ButtonGroup}>
-                    <Button variant="secondary">{this.props.value}</Button>
-    
-                    <Dropdown.Toggle split variant="secondary" id="dropdown-split-basic" />
-    
-                    <Dropdown.Menu>
-                        {components}
-                    </Dropdown.Menu>
-                </Dropdown>
-            );
+const DropDown = (props) => {      
+    if (props.disabled === 'false'){
+        let components = []
+        console.log(props.answerChoices)
+        for (let i = 0; i < 3; i++) {
+            components.push(
+                <Dropdown.Item key={props.answerChoices[i]} eventKey={props.answerChoices[i]}
+                onSelect = {(e) => props.onSelect(i, props.question, e)}
+                key = {'dropdownItem' + (i+1)}>{props.answerChoices[i]}
+                </Dropdown.Item>
+            )
         }
-        
-        else {
-            if (this.props.selected === this.props.answer){
-                components.push (
-                    <InputGroup className = "mb3 input-group-display" key = "correct-dropdown-answer">
-                        <Form.Control placeholder = {this.props.answerChoices[this.props.selected]}   disabled 
+        return(
+            <Dropdown id="dropdown-button" as={ButtonGroup}>
+                <Button variant="secondary">{props.value}</Button>
+
+                <Dropdown.Toggle split variant="secondary" id="dropdown-split-basic" />
+
+                <Dropdown.Menu>
+                    {components}
+                </Dropdown.Menu>
+            </Dropdown>
+        );
+    }
+    
+    else {
+        let answerDisplay
+        if (props.selected === props.answer){
+            answerDisplay = 
+                <InputGroup className = "mb3 input-group-display" key = "correct-dropdown-answer">
+                    <Form.Control placeholder = {props.answerChoices[props.selected]}   disabled 
+                    aria-label="Default"
+                    aria-describedby="inputGroup-sizing-default"
+                    />
+                    <InputGroup.Append>
+                                <InputGroup.Text id="inputGroup-sizing-default"><img src = {checkmark} alt = "checkmark"/></InputGroup.Text>
+                    </InputGroup.Append>
+                </InputGroup>
+            
+        } else {
+            answerDisplay = 
+                <>
+                    <InputGroup className = "mb3 input-group-display" key = "incorrect-dropdown-answer">
+                        <Form.Control placeholder = {props.answerChoices[props.selected]}   disabled 
                         aria-label="Default"
                         aria-describedby="inputGroup-sizing-default"
                         />
                         <InputGroup.Append>
-                                    <InputGroup.Text id="inputGroup-sizing-default"><img src = {checkmark} alt = "checkmark"/></InputGroup.Text>
+                            <InputGroup.Text id="inputGroup-sizing-default"><img src = {xmark} alt = "xmark"/></InputGroup.Text>
                         </InputGroup.Append>
                     </InputGroup>
-                )
-            } else {
-                components.push(
-                        <div>
-                            <InputGroup className = "mb3 input-group-display" key = "incorrect-dropdown-answer">
-                                <Form.Control placeholder = {this.props.answerChoices[this.props.selected]}   disabled 
-                                aria-label="Default"
-                                aria-describedby="inputGroup-sizing-default"
-                                />
-                                <InputGroup.Append>
-                                    <InputGroup.Text id="inputGroup-sizing-default"><img src = {xmark} alt = "xmark"/></InputGroup.Text>
-                                </InputGroup.Append>
-                            </InputGroup>
-                            <InputGroup className = "mb3 input-group-display" key = "correct-dropdown-answer">
-                                <Form.Control placeholder = {this.props.answerChoices[this.props.answer]}   disabled 
-                                aria-label="Default"
-                                aria-describedby="inputGroup-sizing-default"
-                                />
-                                <InputGroup.Append>
-                                    <InputGroup.Text id = "inputGroup-sizing-default">
-                                        <img src = {checkmark} alt = "checkmark"/>
-                                    </InputGroup.Text>
-                                </InputGroup.Append>
-                            </InputGroup>
-                        </div>
-                        
-                )
-                
-            }
-            return(
-                <Form.Group>
-                    {components}
-                </Form.Group>
-            )
-                
+                    <InputGroup className = "mb3 input-group-display" key = "correct-dropdown-answer">
+                        <Form.Control placeholder = {props.answerChoices[props.answer]}   disabled 
+                        aria-label="Default"
+                        aria-describedby="inputGroup-sizing-default"
+                        />
+                        <InputGroup.Append>
+                            <InputGroup.Text id = "inputGroup-sizing-default">
+                                <img src = {checkmark} alt = "checkmark"/>
+                            </InputGroup.Text>
+                        </InputGroup.Append>
+                    </InputGroup>
+                </> 
         }
+        return(
+            <Form.Group>
+                {answerDisplay}
+            </Form.Group>
+        )  
     }
-    
 }
-
-export default DropdownQuestion;
+    
+export default DropDown;

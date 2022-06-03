@@ -9,7 +9,7 @@
     /* background-image: url("https://hhsfbla.com/static/media/cover.7a909140.jpg"); */
     background-image: url("../../assets/hhsfbla-cover1.jpg");
     background-size: cover;
-    background-position-x: -1rem;
+    /* background-position-x: -1rem; */
 }
 
 
@@ -27,12 +27,12 @@
     
 } */
 
-/* @media only screen and (max-width: 1000px){
+@media only screen and (max-width: 600px){
     .home-screen div.home-screen-content{
         background-position-x: -6rem;
     }
     
-} */
+}
 
 
 .login-wrapper{
