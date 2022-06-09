@@ -44,7 +44,7 @@ const Leaderboard = (props) => {
                 <td>{place}</td>
                 <td>{userScore[0].split(" ")[0]}</td>
                 <td>{userScore[0].split(" ")[1]}</td>
-                <td>{userScore[1]}</td>
+                <td>{userScore[1].toFixed(2)}%</td>
             </tr>
         )
         place += 1

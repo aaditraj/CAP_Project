@@ -1,5 +1,5 @@
 import React from "react";
-import '/Users/araj/Desktop/Coding/cap/cap_project/src/App.css';
+// import 'src/App.css';
 import firebase from "firebase/app";
 import "firebase/auth";
 import 'firebase/firestore';
@@ -178,7 +178,7 @@ class Quiz extends React.Component {
     //score and new statistics
     // to the database
     handleSubmit = async() => {
-        // this.score = 0;
+        this.score = 0;
         // if (this.state.multChoiceState1 === null 
         // || this.state.multChoiceState2 === null
         // || this.state.dropdownState === null
@@ -238,6 +238,10 @@ class Quiz extends React.Component {
             let highestScore = this.userData.Highest_Score === null || finalScore > this.userData.Highest_Score ? finalScore : this.userData.Highest_Score
             let lowestScore = this.userData.Lowest_Score === null || finalScore < this.userData.Lowest_Score ? finalScore : this.userData.Lowest_Score
             let average = this.userData.Average === null ? finalScore : ((this.userData.Average * (this.userData.Scores.length - 1)) + finalScore) / this.userData.Scores.length
+            this.setState({
+                submissionState: <Alert className="submission-alert"
+                variant="info" >Processing your submission...</Alert>
+            })
             this.writeUserRef.update({
                 Scores: this.userData.Scores,
                 Highest_Score: highestScore,
@@ -328,6 +332,7 @@ class Quiz extends React.Component {
             // });
         // }
     }
+    
 
     //resets question information when user takes new quiz
     prepareQuiz = async () => {
@@ -442,6 +447,7 @@ class Quiz extends React.Component {
             return pdf;
         }
     }
+    
 
   render() {
     if (this.state.fetched) {
@@ -681,5 +687,8 @@ class Quiz extends React.Component {
     }
 
 }
+
+
+
 
 export default Quiz;

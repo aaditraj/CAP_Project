@@ -35,7 +35,7 @@ import ViewStatistics from "./components/Quiz/Report/Statistics"
 import Leaderboard from "./components/Leaderboard/Leaderboard"
 
 //main class that is being loaded into the HTML
-class AppTest extends React.Component {
+class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = { 

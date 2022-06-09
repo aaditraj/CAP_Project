@@ -29,8 +29,7 @@ const ViewStatistics = (props) => {
           let attempts = props.data.Scores.length
           highestScore = (Number.isInteger(highestScore) ? highestScore : highestScore.toFixed(2))
           lowestScore = (Number.isInteger(lowestScore) ? lowestScore : lowestScore.toFixed(2))
-          // average = (Number.isInteger(average) ? average : average.toFixed(2))
-          average = 0;
+          average = (Number.isInteger(average) ? average : average.toFixed(2))
           component = 
             <Modal.Body className="statistics-modal">
                 
@@ -40,7 +39,7 @@ const ViewStatistics = (props) => {
               <h5><p>Lowest Score:</p> <p>{lowestScore}%</p></h5>
           
           
-              {/* <h5><p>Average Score: </p><p>{average}%</p></h5> */}
+              <h5><p>Average Score: </p><p>{average}%</p></h5>
           
           
               <h5><p>Attempts: </p><p>{attempts}</p></h5>
